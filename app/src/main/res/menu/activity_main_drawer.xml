@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:checked="true"
+            android:icon="@drawable/ic_home"
+            android:title="Início" />
+        <item
+            android:id="@+id/nav_fav"
+            android:enabled="false"
+            android:icon="@drawable/ic_star"
+            android:title="Favoritos" />
+    </group>
+    <item android:title="Cargos">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_presidente"
+                    android:enabled="false"
+                    android:icon="@drawable/ic_presidente"
+                    android:title="Presidente" />
+                <item
+                    android:id="@+id/nav_senador"
+                    android:icon="@drawable/ic_senador"
+                    android:title="Senador" />
+                <item
+                    android:id="@+id/nav_deputado"
+                    android:enabled="false"
+                    android:icon="@drawable/ic_deputado"
+                    android:title="Deputado Federal" />
+            </group>
+        </menu>
+    </item>
+    <item android:title="Outros">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_compartilhar"
+                    android:checkable="false"
+                    android:icon="@drawable/ic_menu_share"
+                    android:title="Compartilhar" />
+                <item
+                    android:id="@+id/nav_sobre"
+                    android:icon="@drawable/ic_info"
+                    android:title="Sobre" />
+                <item
+                    android:id="@+id/nav_feedback"
+                    android:checkable="false"
+                    android:icon="@drawable/ic_feedback"
+                    android:title="Feedback" />
+                <item
+                    android:id="@+id/nav_config"
+                    android:enabled="false"
+                    android:icon="@drawable/ic_menu_manage"
+                    android:title="Configurações" />
+            </group>
+        </menu>
+    </item>
+
+</menu>
