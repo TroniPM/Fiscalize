@@ -1,35 +1,17 @@
-# Fiscalize
+# FISCALIZE App
 
-
-
-Fiscalize é um app para verificar gastos do Presidente, Senadores e Deputados federais. Atualmente está obtendo dados de:
+Fiscalize é um app para acompanhar gastos do Presidente, Senadores e Deputados Federais. Atualmente está obtendo dados de:
 
   - Senadores
 
-### Senadores
+# TO-DO
+Falta obter dados de:
+  - Presidente
+  - Deputados Federais
 
-O portal da transparência para Senadores resume os gastos dos senadores, de uma forma macro, em 2: "Cotas para Exercício da Atividade Parlamentar", e "Outros Gastos":
-* Cotas para Exercício da Atividade Parlamentar:
-  - Aluguel de imóveis para escritório político;
-  - Aquisição de Material de Consumo;
-  - Locomoção, hospedagem, alimentação, combustíveis;
-  - Contratação de Serviços de Apoio ao Parlamentar;
-  - Divulgação da Atividade parlamentar;
-  - Passagens aéreas, aquáticas e terrestre nacionais;
-  - Serviços de Segurança Privada;
-  - Outros Gastos;
-* Outros Gastos:
-  - Viagens Oficiais:
-     - Diárias;
-     - Ressarcimento de Passagens;
-     - Passagens emitidas pelo Senado Federal;
-  - Consumo de Material:
-     - Combustíveis;
-     - Outros Materiais;
-  - Correios
-
-Está sendo feito a obtenção desses dados, porém, ainda com alguns bugs. 
-
-# Contributing
-
-I welcome any contribution, no matter how small or large. Please fork this repository, apply your changes, and submit your contributions by sending a pull request.
+# AJUDE A MANTER
+Ajude a manter esse projeto. Faça uma doação com o valor que você desejar! É rapidinho :]
+  [![N|Solid](https://stc.pagseguro.uol.com.br/public/img/botoes/doacoes/120x53-doar.gif)](https://pag.ae/bmBctt8)
+  
+# CODIFICAÇÃO
+Caso queira desenvolver um novo recurso, será muito bem-vindo. Faça um fork, faça as mudanças e submeta um Pull Request.

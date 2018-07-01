@@ -1,17 +1,11 @@
 <resources>
     <string name="app_name">Fiscalize</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="nav_header_title">Fiscalize</string>
+    <string name="nav_header_subtitle">Fique de olho no seu candidato</string>
+    <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="hello_blank_home">Tá funcionando a parte de senadores "completa" apenas para as depesas dentro de "Cotas para Exercício da Atividade Parlamentar".\nPara o caso de "Outros Gastos", ainda não está pronto. Necessário um script para cada caso.</string>
-    <string name="hello_blank_presidente">FRAGMENT ##PRESIDENTE##</string>
-    <string name="sair">Pressione voltar novamente para sair</string>
-    <string name="carregando">Carregando...</string>
-    <string name="title_activity_splash_screen">SplashScreen</string>
-    <string name="title_activity_libs">LibsActivity</string>
+    <string name="title_activity_senador_list">Lista de Senadores</string>
+    <string name="title_activity_details">DetailsActivity</string>
 </resources>

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4CAF50</color>
-    <color name="colorPrimaryDark">#388E3C</color>
-    <color name="colorGreenDark">#235826</color>
-    <color name="colorButtonBlue">#3E4095</color>
-    <color name="colorAccent">#3E4095</color>
-    <color name="colorErrorIcon">#3E4095</color>
-    <!--<color name="colorAccent">#FFC107</color>-->
-    <color name="colorFundo">#d3d3d3</color>
-    <color name="colorButtonFAB">#FFC107</color>
-    <color name="colorWhite">#ffffff</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="gred">#FFC93437</color>
+    <color name="gblue">#FF375BF1</color>
+    <color name="gyellow">#FFF7D23E</color>
+    <color name="ggreen">#FF34A350</color>
+    <color name="indigo">#1A237E</color>
 </resources>

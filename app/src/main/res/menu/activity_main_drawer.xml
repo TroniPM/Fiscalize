@@ -1,61 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
-            android:checked="true"
-            android:icon="@drawable/ic_home"
-            android:title="Início" />
+            android:id="@+id/nav_senador"
+            android:checkable="false"
+            android:icon="@drawable/ic_menu_senador"
+            android:title="Senador" />
         <item
-            android:id="@+id/nav_fav"
+            android:id="@+id/nav_deputado_federal"
+            android:checkable="false"
             android:enabled="false"
-            android:icon="@drawable/ic_star"
-            android:title="Favoritos" />
+            android:icon="@drawable/ic_menu_deputado_federal"
+            android:title="Deputado Federal" />
+        <item
+            android:id="@+id/nav_presidente"
+            android:checkable="false"
+            android:enabled="false"
+            android:icon="@drawable/ic_menu_presidente"
+            android:title="Presidente" />
     </group>
-    <item android:title="Cargos">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_presidente"
-                    android:enabled="false"
-                    android:icon="@drawable/ic_presidente"
-                    android:title="Presidente" />
-                <item
-                    android:id="@+id/nav_senador"
-                    android:icon="@drawable/ic_senador"
-                    android:title="Senador" />
-                <item
-                    android:id="@+id/nav_deputado"
-                    android:enabled="false"
-                    android:icon="@drawable/ic_deputado"
-                    android:title="Deputado Federal" />
-            </group>
-        </menu>
-    </item>
+
     <item android:title="Outros">
         <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_compartilhar"
-                    android:checkable="false"
-                    android:icon="@drawable/ic_menu_share"
-                    android:title="Compartilhar" />
-                <item
-                    android:id="@+id/nav_sobre"
-                    android:icon="@drawable/ic_info"
-                    android:title="Sobre" />
-                <item
-                    android:id="@+id/nav_feedback"
-                    android:checkable="false"
-                    android:icon="@drawable/ic_feedback"
-                    android:title="Feedback" />
-                <item
-                    android:id="@+id/nav_config"
-                    android:enabled="false"
-                    android:icon="@drawable/ic_menu_manage"
-                    android:title="Configurações" />
-            </group>
+            <item
+                android:id="@+id/nav_compartilhar"
+                android:checkable="false"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Compartilhe" />
+            <item
+                android:id="@+id/nav_opensource"
+                android:checkable="false"
+                android:icon="@drawable/ic_menu_opensource"
+                android:title="Open Source" />
+            <item
+                android:id="@+id/nav_sobre"
+                android:checkable="false"
+                android:icon="@drawable/ic_menu_info"
+                android:title="Sobre" />
+            <item
+                android:id="@+id/nav_doar"
+                android:checkable="false"
+                android:icon="@drawable/ic_menu_doar"
+                android:title="Ajude a manter" />
         </menu>
     </item>
 
