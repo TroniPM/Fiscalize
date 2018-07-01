@@ -1,6 +1,7 @@
 package com.tronipm.matt.fiscalize.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -91,13 +92,22 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_presidente) {
 
         } else if (id == R.id.nav_compartilhar) {
-
+            String link = "https://play.google.com/store/apps/details?id=com.tronipm.matt.fiscalize";
+            String shareBody = "Olha esse app que legal! Dá pra ver os gastos de Senadores em tempo real. \r\n" + link;
+            Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+            sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+            startActivity(Intent.createChooser(sharingIntent, "compartilhar"));
         } else if (id == R.id.nav_opensource) {
-
+            String url = "https://github.com/TroniPM/Fiscalize";
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
         } else if (id == R.id.nav_sobre) {
 
         } else if (id == R.id.nav_doar) {
-
+            String url = "https://pag.ae/bmBctt8";
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(browserIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -45,6 +45,8 @@ public class SenadorListActivity extends AppCompatActivity {
         db = new TinyDB(this);
         crawler = new CrawlerSenador();
 
+        startDialog();
+
         list = db.getListSenador(TinyDB.KEY_SENADOR_LIST);
 
         refresh();
@@ -107,7 +109,6 @@ public class SenadorListActivity extends AppCompatActivity {
         private Exception exception;
 
         protected ArrayList<EntidadeSenador> doInBackground(String... urls) {
-            startDialog();
             try {
                 return crawler.conn_getListSenadores();
             } catch (Exception e) {
