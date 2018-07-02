@@ -1,6 +1,8 @@
 package com.tronipm.matt.fiscalize.crawlers.entities;
 
-public class EntidadeSenadorMes {
+import java.io.Serializable;
+
+public class EntidadeSenadorMes implements Serializable {
 
     public String titulo = null;
     public EntidadeSenadorTabelaMes tabela = null;

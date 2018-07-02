@@ -1,6 +1,8 @@
 package com.tronipm.matt.fiscalize.crawlers.entities;
 
-public class EntidadeSenadorTabelaMesLinha {
+import java.io.Serializable;
+
+public class EntidadeSenadorTabelaMesLinha implements Serializable {
 
     public String doc = null;
     public String fornecedor = null;

@@ -25,25 +25,25 @@ public class CrawlerSenador {
     private static final String SENADOR_LINK1 = "http://www6g.senado.leg.br/transparencia/sen/" + PARAM_ID + "/";
     private static final String SENADOR_LINK2 = "http://www6g.senado.leg.br/transparencia/sen/" + PARAM_ID + "/?ano=" + PARAM_ANO;
 
-    public static void main(String[] args) {
-        CrawlerSenador c = new CrawlerSenador();
-        //Pegar lista de senadores (id, nome, partido)
-        try {
-            ArrayList<EntidadeSenador> senadores = c.conn_getListSenadores();
-            for (EntidadeSenador in : senadores) {
-                System.out.println(in);
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        //pegar dados do senador
+//    public static void main(String[] args) {
+//        CrawlerSenador c = new CrawlerSenador();
+//        //Pegar lista de senadores (id, nome, partido)
+//        try {
+//            ArrayList<EntidadeSenador> senadores = c.conn_getListSenadores();
+//            for (EntidadeSenador in : senadores) {
+//                System.out.println(in);
+//            }
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+    //pegar dados do senador
 //        EntidadeSenador senador = c.conn_getSenador("4981", "2018");
 //        EntidadeSenador senador = c.conn_getSenador("4981");
 //        senador = c.conn_getSenadorAno(senador, senador.getTabelas().get(0).linhas.get(0).link);
 //        senador = c.conn_getSenadorMes(senador, senador.getConteudoAno().get(0).tabela.linhas.get(1).link);
 //        System.out.println(senador);
 
-    }
+//    }
 
     public EntidadeSenador conn_getSenadorAno(EntidadeSenador senador, String url) {
         if (url == null || url.trim().isEmpty()) {
@@ -91,12 +91,12 @@ public class CrawlerSenador {
         return senador;
     }
 
-    public EntidadeSenador conn_getSenador(String id, String ano) {
-        if (id == null || id.trim().isEmpty()) {
+    public EntidadeSenador conn_getSenador(EntidadeSenador senador, String ano) {
+        if (senador.getId() == null || senador.getId().trim().isEmpty()) {
             return null;
         }
-        EntidadeSenador senador = new EntidadeSenador();
-        senador.setId(id);
+//        EntidadeSenador senador = new EntidadeSenador();
+//        senador.setId(id);
 
         HTMLObject pagina;
 
@@ -104,9 +104,9 @@ public class CrawlerSenador {
 
         String url;
         if (ano == null) {
-            url = SENADOR_LINK1.replace(PARAM_ID, id);
+            url = SENADOR_LINK1.replace(PARAM_ID, senador.getId());
         } else {
-            url = SENADOR_LINK2.replace(PARAM_ID, id).replace(PARAM_ANO, ano);
+            url = SENADOR_LINK2.replace(PARAM_ID, senador.getId()).replace(PARAM_ANO, ano);
         }
         senador.setLinkPortalTransparencia(url);
 
@@ -172,15 +172,13 @@ public class CrawlerSenador {
     }
 
     public EntidadeSenador conn_getSenador(EntidadeSenador senador) {
-        if (senador.getId() == null) {
-            return null;
-        } else {
-            return conn_getSenador(senador.getId());
-        }
+        return conn_getSenador(senador, null);
     }
 
     public EntidadeSenador conn_getSenador(String id) {
-        return conn_getSenador(id, null);
+        EntidadeSenador senador = new EntidadeSenador();
+        senador.setId(id);
+        return conn_getSenador(senador, null);
     }
 
     public ArrayList<EntidadeSenador> conn_getListSenadores() throws Exception {

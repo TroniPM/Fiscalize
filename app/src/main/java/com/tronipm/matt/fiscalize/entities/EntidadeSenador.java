@@ -4,9 +4,10 @@ import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorAno;
 import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorMes;
 import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabela;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class EntidadeSenador {
+public class EntidadeSenador implements Serializable {
 
     private String id = null;
     private String nomeCivil = null;

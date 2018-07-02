@@ -1,12 +1,12 @@
 package com.tronipm.matt.fiscalize.crawlers.entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- *
  * @author Matt
  */
-public class EntidadeSenadorTabela {
+public class EntidadeSenadorTabela implements Serializable {
 
     public String titulo = null;
     public ArrayList<EntidadeSenadorTabelaLinha> linhas = new ArrayList<>();

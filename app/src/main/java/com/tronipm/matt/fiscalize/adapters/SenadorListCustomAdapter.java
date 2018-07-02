@@ -1,47 +1,31 @@
 package com.tronipm.matt.fiscalize.adapters;
 
 import android.content.Context;
-import android.support.design.widget.Snackbar;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.tronipm.matt.fiscalize.R;
+import com.tronipm.matt.fiscalize.activities.SenadorActivity;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 
 import java.util.ArrayList;
 
-public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> implements View.OnClickListener {
+public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> /*implements View.OnClickListener*/ {
 
     private ArrayList<EntidadeSenador> dataSet;
     private Context mContext;
 
     // View lookup cache
-    private static class ViewHolder {
-        TextView txtName;
-        TextView txtType;
-        TextView txtVersion;
+    private class ViewHolder {
+        TextView txtNome;
+        TextView txtPartido;
         ImageView info;
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        int position = (Integer) v.getTag();
-        Object object = getItem(position);
-        EntidadeSenador dataModel = (EntidadeSenador) object;
-
-        switch (v.getId()) {
-            case R.id.item_info:
-                Snackbar.make(v, "Nome: " + dataModel.getNomeCivil(), Snackbar.LENGTH_LONG)
-                        .setAction("No action", null).show();
-                break;
-        }
     }
 
     public SenadorListCustomAdapter(ArrayList<EntidadeSenador> data, Context context) {
@@ -51,9 +35,6 @@ public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> impl
 
     }
 
-
-    private int lastPosition = -1;
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the data item for this position
@@ -61,36 +42,48 @@ public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> impl
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
-        final View result;
-
+        final int pos = position;
         if (convertView == null) {
 
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.row_item, parent, false);
-            viewHolder.txtName = (TextView) convertView.findViewById(R.id.name);
-            viewHolder.txtType = (TextView) convertView.findViewById(R.id.type);
-            viewHolder.txtVersion = (TextView) convertView.findViewById(R.id.version_number);
+            viewHolder.txtNome = (TextView) convertView.findViewById(R.id.name);
+            viewHolder.txtPartido = (TextView) convertView.findViewById(R.id.type);
             viewHolder.info = (ImageView) convertView.findViewById(R.id.item_info);
-
-            result = convertView;
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
-            result = convertView;
         }
+
 
 //        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
 //        result.startAnimation(animation);
-        lastPosition = position;
+//        lastPosition = position;
 
-        viewHolder.txtName.setText(dataModel.getNomeCivil());
-        viewHolder.txtType.setText(dataModel.getPartido());
-        viewHolder.txtVersion.setText(dataModel.getId());
-        viewHolder.info.setOnClickListener(this);
-        viewHolder.info.setTag(position);
-        // Return the completed view to render on screen
+        viewHolder.txtNome.setText(dataSet.get(position).getNomeCivil());
+        viewHolder.txtPartido.setText(dataSet.get(position).getPartido());
+//        viewHolder.txtVersion.setText(dataSet.get(position).getId());
+        if (dataSet.get(position).getLinkFoto() != null && !dataSet.get(position).getLinkFoto().isEmpty()) {
+            //https://github.com/bumptech/glide
+            Glide.with(mContext).load(dataSet.get(position).getLinkFoto()).into(viewHolder.info);
+            System.out.println("!!!!SIM >> " + dataSet.get(position).getNomeCivil());
+        } else {
+            System.out.println("NAO >> " + dataSet.get(position).getNomeCivil());
+        }
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Object object = getItem(pos);
+                EntidadeSenador dataModel = (EntidadeSenador) object;
+
+                Intent intent = new Intent(mContext, SenadorActivity.class);
+                intent.putExtra(SenadorActivity.PARAM1, dataModel);
+                mContext.startActivity(intent);
+            }
+        });
         return convertView;
     }
 }

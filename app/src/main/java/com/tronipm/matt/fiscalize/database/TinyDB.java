@@ -54,7 +54,6 @@ public class TinyDB {
         preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
     }
 
-
     /**
      * Decodes the Bitmap from 'path' and returns it
      *
@@ -83,7 +82,6 @@ public class TinyDB {
     public String getSavedImagePath() {
         return lastImagePath;
     }
-
 
     /**
      * Saves 'theBitmap' into folder 'theFolder' with the name 'theImageName'
@@ -349,10 +347,10 @@ public class TinyDB {
         return newList;
     }
 
-    public ArrayList<EntidadeSenador> getListSenador(String key) {
+    public ArrayList<EntidadeSenador> getListSenador() {
         Gson gson = new Gson();
 
-        ArrayList<String> objStrings = getListString(key);
+        ArrayList<String> objStrings = getListString(KEY_SENADOR_LIST);
         ArrayList<EntidadeSenador> objects = new ArrayList<EntidadeSenador>();
 
         for (String jObjString : objStrings) {
@@ -360,6 +358,18 @@ public class TinyDB {
             objects.add(value);
         }
         return objects.isEmpty() ? null : objects;
+    }
+
+    public EntidadeSenador getSenador(String id) {
+        ArrayList<EntidadeSenador> arr = getListSenador();
+        if (arr != null && !arr.isEmpty()) {
+            for (EntidadeSenador in : arr) {
+                if (in.getId().equals(id)) {
+                    return in;
+                }
+            }
+        }
+        return null;
     }
 
     public ArrayList<Object> getListObject(String key, Class<?> mClass) {
@@ -375,7 +385,6 @@ public class TinyDB {
         return objects;
     }
 
-
     public <T> T getObject(String key, Class<T> classOfT) {
 
         String json = getString(key);
@@ -384,7 +393,6 @@ public class TinyDB {
             throw new NullPointerException();
         return (T) value;
     }
-
 
     // Put methods
 
@@ -546,14 +554,30 @@ public class TinyDB {
         putListString(key, objStrings);
     }
 
-    public void putListSenador(String key, ArrayList<EntidadeSenador> objArray) {
-        checkForNullKey(key);
+    public void putListSenador(ArrayList<EntidadeSenador> objArray) {
+        checkForNullKey(KEY_SENADOR_LIST);
         Gson gson = new Gson();
         ArrayList<String> objStrings = new ArrayList<String>();
         for (Object obj : objArray) {
             objStrings.add(gson.toJson(obj));
         }
-        putListString(key, objStrings);
+        putListString(KEY_SENADOR_LIST, objStrings);
+    }
+
+    public void putSenador(EntidadeSenador sen) {
+        ArrayList<EntidadeSenador> arr = getListSenador();
+        boolean flag = true;
+        for (int i = 0; i < arr.size(); i++) {
+            if (arr.get(i).getId().equals(sen.getId())) {
+                arr.set(i, sen);
+                flag = false;
+                break;
+            }
+        }
+        if (flag) {
+            arr.add(sen);
+        }
+        putListSenador(arr);
     }
 
     /**
@@ -574,7 +598,6 @@ public class TinyDB {
     public boolean deleteImage(String path) {
         return new File(path).delete();
     }
-
 
     /**
      * Clear SharedPreferences (remove everything)
@@ -614,7 +637,6 @@ public class TinyDB {
 
         preferences.unregisterOnSharedPreferenceChangeListener(listener);
     }
-
 
     /**
      * Check if external storage is writable or not

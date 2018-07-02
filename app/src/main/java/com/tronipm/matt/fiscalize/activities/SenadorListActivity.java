@@ -47,7 +47,10 @@ public class SenadorListActivity extends AppCompatActivity {
 
         startDialog();
 
-        list = db.getListSenador(TinyDB.KEY_SENADOR_LIST);
+        list = db.getListSenador();
+        for (EntidadeSenador in : list) {
+            System.out.println(in);
+        }
 
         refresh();
     }
@@ -122,13 +125,8 @@ public class SenadorListActivity extends AppCompatActivity {
             SenadorListActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    db.putListSenador(TinyDB.KEY_SENADOR_LIST, thislist);
+                    db.putListSenador(thislist);
                     SenadorListActivity.this.list = thislist;
-
-//                    ArrayList<EntidadeSenador> aaaa = db.getListSenador(TinyDB.KEY_SENADOR_LIST);
-//                    for (EntidadeSenador in : aaaa) {
-//                        System.out.println(in.toString());
-//                    }
                     SenadorListActivity.this.refresh();
                 }
             });
