@@ -2,3 +2,5 @@ TODO bug: corrigir imagem carregada nas posições erradas do listview.
 TODO bug: corrigir obtenção do linkVotacoes. Está vindo com espaço.
 
 TODO: fazer tela de SOBRE.
+
+Colocar botão de refresh de dados na tela de PERFIL.
