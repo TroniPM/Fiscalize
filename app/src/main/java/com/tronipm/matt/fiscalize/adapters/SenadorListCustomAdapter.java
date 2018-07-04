@@ -2,6 +2,9 @@ package com.tronipm.matt.fiscalize.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +13,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 import com.tronipm.matt.fiscalize.R;
 import com.tronipm.matt.fiscalize.activities.SenadorActivity;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> /*implements View.OnClickListener*/ {
@@ -23,6 +29,7 @@ public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> /*im
 
     // View lookup cache
     private class ViewHolder {
+        int position = -1;
         TextView txtNome;
         TextView txtPartido;
         ImageView info;
@@ -51,26 +58,32 @@ public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> /*im
             viewHolder.txtNome = (TextView) convertView.findViewById(R.id.name);
             viewHolder.txtPartido = (TextView) convertView.findViewById(R.id.type);
             viewHolder.info = (ImageView) convertView.findViewById(R.id.item_info);
+            viewHolder.info.setTag("" + position);
+
+            viewHolder.position = pos;
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+        viewHolder.txtNome.setText(dataModel.getNomeCivil());
+        viewHolder.txtPartido.setText(dataModel.getPartido());
+        viewHolder.position = pos;
 
-//        Animation animation = AnimationUtils.loadAnimation(mContext, (position > lastPosition) ? R.anim.up_from_bottom : R.anim.down_from_top);
-//        result.startAnimation(animation);
-//        lastPosition = position;
-
-        viewHolder.txtNome.setText(dataSet.get(position).getNomeCivil());
-        viewHolder.txtPartido.setText(dataSet.get(position).getPartido());
-//        viewHolder.txtVersion.setText(dataSet.get(position).getId());
-        if (dataSet.get(position).getLinkFoto() != null && !dataSet.get(position).getLinkFoto().isEmpty()) {
-            //https://github.com/bumptech/glide
-            Glide.with(mContext).load(dataSet.get(position).getLinkFoto()).into(viewHolder.info);
-            System.out.println("!!!!SIM >> " + dataSet.get(position).getNomeCivil());
-        } else {
-            System.out.println("NAO >> " + dataSet.get(position).getNomeCivil());
+        if (dataModel.getLinkFoto() != null) {
+//            try {
+//                Bitmap bitmap = Picasso.get().load(dataSet.get(position).getLinkFoto()).get();
+//                if (dataSet.get(position).getLinkFoto().equals(dataSet.get(viewHolder.position).getLinkFoto())) {
+//                    viewHolder.info.setImageBitmap(bitmap);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            //Glide.with(mContext).load(dataSet.get(position).getLinkFoto()).into(viewHolder.info);
+//            new ThumbnailTask(pos, dataSet.get(pos).getLinkFoto(), viewHolder)
+//                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+//            new ThumbnailTask(pos, dataModel.getLinkFoto(), viewHolder).execute();
         }
 
         convertView.setOnClickListener(new View.OnClickListener() {
@@ -85,5 +98,42 @@ public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> /*im
             }
         });
         return convertView;
+    }
+
+    class ThumbnailTask extends AsyncTask<Void, Void, Bitmap> {
+        private final int mPosition;
+        private final String mLink;
+        private final ViewHolder mHolder;
+
+        public ThumbnailTask(int position, String link, ViewHolder holder) {
+            mPosition = position;
+            mHolder = holder;
+            mLink = link;
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... arg0) {
+            Bitmap bitmap = null;
+            try {
+                bitmap = Picasso.get().load(mLink).get();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return bitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            try {
+                if (dataSet.get(mPosition).getLinkFoto().equals(mLink)
+                        && mHolder.position == mPosition
+                        && mHolder.info.getTag().equals("" + mPosition)) {
+
+                    mHolder.info.setImageBitmap(bitmap);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

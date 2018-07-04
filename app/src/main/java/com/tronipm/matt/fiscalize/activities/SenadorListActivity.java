@@ -48,10 +48,11 @@ public class SenadorListActivity extends AppCompatActivity {
         startDialog();
 
         list = db.getListSenador();
-        for (EntidadeSenador in : list) {
-            System.out.println(in);
+        if (list != null) {
+            for (EntidadeSenador in : list) {
+                System.out.println(in);
+            }
         }
-
         refresh();
     }
 
