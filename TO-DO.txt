@@ -1,6 +1,5 @@
-TODO bug: corrigir imagem carregada nas posições erradas do listview.
-TODO bug: corrigir obtenção do linkVotacoes. Está vindo com espaço.
-
-TODO: fazer tela de SOBRE.
-
-Colocar botão de refresh de dados na tela de PERFIL.
+TODO: 
+	Fazer tela de SOBRE.
+	Botão refresh de dados na tela de PERFIL
+	Botão abrir na web na tela de PERFIL
+	Fazer Tela de RESUMO
