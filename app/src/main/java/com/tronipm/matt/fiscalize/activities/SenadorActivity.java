@@ -43,8 +43,8 @@ public class SenadorActivity extends AppCompatActivity {
     private String ano = null;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private SenadorFragmentPerfil fragOne;
-    private SenadorFragmentGastos fragTwo;
+    private SenadorFragmentPerfil fragOne = null;
+    private SenadorFragmentGastos fragTwo = null;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -98,13 +98,15 @@ public class SenadorActivity extends AppCompatActivity {
 
         senador = (EntidadeSenador) getIntent().getSerializableExtra(PARAM1);
 
+        get();
 
         //APENAS PARA DEBUG
         if (senador != null) {
             if (senador.getConteudoBalancete() == null) {
                 new RetrieveListTask(senador, null).execute("null");
             } else {
-                get();
+                SenadorActivity.this.fragOne.populate();
+                SenadorActivity.this.fragTwo.populate();
             }
 
             System.out.println(senador);
@@ -142,7 +144,7 @@ public class SenadorActivity extends AppCompatActivity {
     }
 
     private void get() {
-        if (ano == null) {
+        if (ano == null && senador.getAnosDisponiveis() != null && senador.getAnosDisponiveis().size() > 0) {
             ano = senador.getAnosDisponiveis().get(senador.getAnosDisponiveis().size() - 1);
         }
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -252,21 +254,24 @@ public class SenadorActivity extends AppCompatActivity {
             SenadorActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+//                    SenadorActivity.this.get();
                     db.putSenador(senadorDownloaded);
 
                     SenadorActivity.this.senador = senadorDownloaded;
-                    SenadorActivity.this.ano = ano;
-                    SenadorActivity.this.tabLayout.invalidate();
-                    SenadorActivity.this.viewPager.invalidate();
-
                     SenadorActivity.this.fragOne.setSenador(senadorDownloaded);
                     SenadorActivity.this.fragTwo.setSenador(senadorDownloaded);
+                    SenadorActivity.this.ano = ano;
                     SenadorActivity.this.fragOne.setAno(ano);
                     SenadorActivity.this.fragTwo.setAno(ano);
+
                     SenadorActivity.this.fragOne.populate();
                     SenadorActivity.this.fragTwo.populate();
 
+                    SenadorActivity.this.tabLayout.invalidate();
+                    SenadorActivity.this.viewPager.invalidate();
+
                     SenadorActivity.this.stopDialog();
+
                     System.out.println(senadorDownloaded);
                 }
             });

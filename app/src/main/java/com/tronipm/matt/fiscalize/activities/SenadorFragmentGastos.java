@@ -81,7 +81,7 @@ public class SenadorFragmentGastos extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         currentView = inflater.inflate(R.layout.fragment_senador_fragment_gastos, container, false);
-        populate();
+//        populate();
         return currentView;
     }
 

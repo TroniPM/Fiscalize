@@ -77,7 +77,7 @@ public class SenadorFragmentPerfil extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         currentView = inflater.inflate(R.layout.fragment_senador_fragment_perfil, container, false);
-        populate();
+//        populate();
         return currentView;
     }
 
@@ -112,8 +112,7 @@ public class SenadorFragmentPerfil extends Fragment {
         end.setText(senador.getEscritorioApoio());
     }
 
-
-    // TODO: Rename method, update argument and hook method into UI event
+S    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
 //        if (mListener != null) {
 //            mListener.onFragmentInteraction(uri);

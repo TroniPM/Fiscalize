@@ -250,10 +250,7 @@ public class CrawlerSenador {
                     try {
                         String link = space(in.getChildrens().get(1).getChildrens().get(0).getAttribute("href"));
                         if (link != null) {
-                            System.out.println(">> " + link);
                             linha.link = (link.contains("http") ? "" : senador.getLinkPortalTransparencia()) + link;
-
-                            System.out.println(">> " + linha.link);
                         }
 
                     } catch (Exception e) {
