@@ -12,6 +12,7 @@ import android.widget.ExpandableListView;
 import com.tronipm.matt.fiscalize.R;
 import com.tronipm.matt.fiscalize.adapters.expandablelistview.ExpandableCollection;
 import com.tronipm.matt.fiscalize.adapters.expandablelistview.ExpandableListAdapter;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorBalancete;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 
 import java.util.ArrayList;
@@ -21,14 +22,29 @@ public class SenadorFragmentGastos extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
     private ExpandableListView expandableListView;
     private ExpandableListAdapter expandableListAdapter;
 
     // TODO: Rename and change types of parameters
     private EntidadeSenador senador;
+    private String ano;
 
-//    private OnFragmentInteractionListener mListener;
+
+    public View currentView = null;
+
+    //    private OnFragmentInteractionListener mListener;
+    public void setSenador(EntidadeSenador senador) {
+        this.senador = senador;
+    }
+
+    public void setAno(String ano) {
+        if (ano == null) {
+            ano = senador.getAnosDisponiveis().get(senador.getAnosDisponiveis().size() - 1);
+        }
+        this.ano = ano;
+    }
 
     public SenadorFragmentGastos() {
         // Required empty public constructor
@@ -42,10 +58,11 @@ public class SenadorFragmentGastos extends Fragment {
      * @return A new instance of fragment SenadorFragmentGastos.
      */
     // TODO: Rename and change types and number of parameters
-    public static SenadorFragmentGastos newInstance(EntidadeSenador senador) {
+    public static SenadorFragmentGastos newInstance(EntidadeSenador senador, String ano) {
         SenadorFragmentGastos fragment = new SenadorFragmentGastos();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, senador);
+        args.putString(ARG_PARAM2, ano);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,6 +72,7 @@ public class SenadorFragmentGastos extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             senador = (EntidadeSenador) getArguments().getSerializable(ARG_PARAM1);
+            ano = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -62,36 +80,48 @@ public class SenadorFragmentGastos extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_senador_fragment_gastos, container, false);
-        populate(view);
-        return view;
+        currentView = inflater.inflate(R.layout.fragment_senador_fragment_gastos, container, false);
+        populate();
+        return currentView;
     }
 
-    private void populate(View view) {
+    public void populate() {
         ExpandableCollection.key_value = new ArrayList<String>();
         ExpandableCollection.expandable_main_arr = new ArrayList<ExpandableCollection>();
         ExpandableCollection.expandable_hashmap = new HashMap<String, ArrayList<ExpandableCollection>>();
-        if (senador.getTabelas() != null && senador.getTabelas().get(0).linhas != null)
-            for (int i = 0; i < senador.getTabelas().size(); i++) {
+
+        EntidadeSenadorBalancete balancete = null;
+        if (senador.getConteudoBalancete() != null) {
+            for (EntidadeSenadorBalancete in : senador.getConteudoBalancete()) {
+                if (in.ano.equals(this.ano)) {
+                    balancete = in;
+                    break;
+                }
+            }
+        }
+        if (balancete != null) {
+            for (int i = 0; i < balancete.tabela.size(); i++) {
                 //Crio o período
-                ExpandableCollection.key_value.add(senador.getTabelas().get(i).titulo);
+                ExpandableCollection.key_value.add(balancete.tabela.get(i).titulo);
                 ArrayList<ExpandableCollection> arr_obj = new ArrayList<ExpandableCollection>();
 
-                for (int j = 0; j < senador.getTabelas().get(i).linhas.size(); j++) {
-                //Crio a Matéria
-                arr_obj.add(new ExpandableCollection(
-                        senador.getTabelas().get(i).linhas.get(j).label,
-                        senador.getTabelas().get(i).linhas.get(j).conteudo,
-                        senador.getTabelas().get(i).linhas.get(j).link));
+                for (int j = 0; j < balancete.tabela.get(i).linhas.size(); j++) {
+                    //Crio a Matéria
+                    arr_obj.add(new ExpandableCollection(
+                            balancete.tabela.get(i).linhas.get(j).label,
+                            balancete.tabela.get(i).linhas.get(j).conteudo,
+                            balancete.tabela.get(i).linhas.get(j).link));
                 }
                 ExpandableCollection.expandable_hashmap.put(ExpandableCollection.key_value.get(i), arr_obj);
             }
+        }
 
         expandableListAdapter = new ExpandableListAdapter(getActivity(),
                 ExpandableCollection.key_value,
                 ExpandableCollection.expandable_hashmap);
 
-        expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
+        expandableListView = (ExpandableListView) currentView.findViewById(R.id.expandableListView);
+        expandableListView.removeAllViewsInLayout();
         expandableListView.setAdapter(expandableListAdapter);
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
@@ -132,7 +162,6 @@ public class SenadorFragmentGastos extends Fragment {
 //            mListener.onFragmentInteraction(uri);
 //        }
 //    }
-
 //    @Override
 //    public void onAttach(Context context) {
 //        super.onAttach(context);
@@ -143,23 +172,11 @@ public class SenadorFragmentGastos extends Fragment {
 //                    + " must implement OnFragmentInteractionListener");
 //        }
 //    }
-
 //    @Override
 //    public void onDetach() {
 //        super.onDetach();
 //        mListener = null;
 //    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
 //    public interface OnFragmentInteractionListener {
 //        // TODO: Update argument type and name
 //        void onFragmentInteraction(Uri uri);

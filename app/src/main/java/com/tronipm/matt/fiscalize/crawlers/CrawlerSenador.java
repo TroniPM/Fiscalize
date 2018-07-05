@@ -1,13 +1,14 @@
 package com.tronipm.matt.fiscalize.crawlers;
 
-import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorAno;
-import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorMes;
-import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabela;
-import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabelaAno;
-import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabelaAnoLinha;
-import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabelaLinha;
-import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabelaMes;
-import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabelaMesLinha;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorBalancete;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabelaBalancete;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabelaBalanceteLinha;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorResumo;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabelaResumo;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabelaResumoLinha;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorDetalhe;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabelaDetalhe;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabelaDetalheLinha;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 import com.tronipm.matt.fiscalize.crawlers.web.Browser;
 import com.tronipm.matt.fiscalize.crawlers.web.HTMLObject;
@@ -27,7 +28,7 @@ public class CrawlerSenador {
 
 //    public static void main(String[] args) {
 //        CrawlerSenador c = new CrawlerSenador();
-//        //Pegar lista de senadores (id, nome, partido)
+//    //Pegar lista de senadores (id, nome, partido)
 //        try {
 //            ArrayList<EntidadeSenador> senadores = c.conn_getListSenadores();
 //            for (EntidadeSenador in : senadores) {
@@ -36,13 +37,20 @@ public class CrawlerSenador {
 //        } catch (Exception ex) {
 //            ex.printStackTrace();
 //        }
-    //pegar dados do senador
+//    pegar dados do senador
 //        EntidadeSenador senador = c.conn_getSenador("4981", "2018");
 //        EntidadeSenador senador = c.conn_getSenador("4981");
-//        senador = c.conn_getSenadorAno(senador, senador.getTabelas().get(0).linhas.get(0).link);
-//        senador = c.conn_getSenadorMes(senador, senador.getConteudoAno().get(0).tabela.linhas.get(1).link);
+//        senador = c.conn_getSenadorAno(senador, senador.getConteudoBalancete().get(0).tabela.get(0).linhas.get(0).link);
+//        senador = c.conn_getSenadorMes(senador, senador.getConteudoResumo().get(0).tabela.linhas.get(0).link);
 //        System.out.println(senador);
-
+//        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+//
+//        String ano = senador.getAnosDisponiveis().get(senador.getAnosDisponiveis().size() - 2);
+//        senador = c.conn_getSenador(senador, ano);
+//        senador = c.conn_getSenadorAno(senador, senador.getConteudoBalancete().get(1).tabela.get(0).linhas.get(0).link);
+//        senador = c.conn_getSenadorMes(senador, senador.getConteudoResumo().get(1).tabela.linhas.get(0).link);
+//
+//        System.out.println(senador);
 //    }
 
     public EntidadeSenador conn_getSenadorAno(EntidadeSenador senador, String url) {
@@ -52,11 +60,11 @@ public class CrawlerSenador {
         HTMLObject pagina;
         Browser b = new Browser();
         if (DEBUG) {
-            pagina = HTMLObject.parse(Util.carregarAno());
+//            pagina = HTMLObject.parse(Util.carregarAno());
         } else {
             String html = b.get(url);
             pagina = HTMLObject.parse(html);
-            Util.escreverEmArquivo("./senadorano.txt", html, false);
+//            Util.escreverEmArquivo("./senadorano.txt", html, false);
         }
 
         try {
@@ -75,11 +83,11 @@ public class CrawlerSenador {
         HTMLObject pagina;
         Browser b = new Browser();
         if (DEBUG) {
-            pagina = HTMLObject.parse(Util.carregarMes());
+//            pagina = HTMLObject.parse(Util.carregarMes());
         } else {
             String html = b.get(url);
             pagina = HTMLObject.parse(html);
-            Util.escreverEmArquivo("./senadormes.txt", html, false);
+//            Util.escreverEmArquivo("./senadormes.txt", html, false);
         }
 
         try {
@@ -111,11 +119,11 @@ public class CrawlerSenador {
         senador.setLinkPortalTransparencia(url);
 
         if (DEBUG) {
-            pagina = HTMLObject.parse(Util.carregar());
+//            pagina = HTMLObject.parse(Util.carregar());
         } else {
             String html = b.get(url);
             pagina = HTMLObject.parse(html);
-            Util.escreverEmArquivo("./senador.txt", html, false);
+//            Util.escreverEmArquivo("./senador.txt", html, false);
         }
         try {
             senador = getElementoDadosPessoais(senador, pagina);
@@ -138,32 +146,44 @@ public class CrawlerSenador {
             ex.printStackTrace();
         }
         try {
-            senador = getTabelaCeaps(senador, pagina);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        try {
-            senador = getTabelaOutrosGastos(senador, pagina);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        try {
-            senador = getTabelaBeneficios(senador, pagina);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        try {
-            senador = getTabelaPessoal(senador, pagina);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        try {
-            senador = getTabelaSubsidios(senador, pagina);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        try {
             senador = getElementoFoto(senador, pagina);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+        EntidadeSenadorBalancete balancete = new EntidadeSenadorBalancete();
+        balancete.link = url;
+        balancete.ano = ano != null ? ano
+                : senador.getAnosDisponiveis().get(senador.getAnosDisponiveis().size() - 1);
+        senador.add(balancete);
+
+        try {
+            EntidadeSenadorTabelaBalancete tab = getTabelaCeaps(senador, pagina);
+            balancete.add(tab);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            EntidadeSenadorTabelaBalancete tab = getTabelaOutrosGastos(senador, pagina);
+            balancete.add(tab);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            EntidadeSenadorTabelaBalancete tab = getTabelaBeneficios(senador, pagina);
+            balancete.add(tab);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            EntidadeSenadorTabelaBalancete tab = getTabelaPessoal(senador, pagina);
+            balancete.add(tab);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        try {
+            EntidadeSenadorTabelaBalancete tab = getTabelaSubsidios(senador, pagina);
+            balancete.add(tab);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -207,9 +227,9 @@ public class CrawlerSenador {
         return arr;
     }
 
-    private EntidadeSenador getTabelaCeaps(EntidadeSenador senador, HTMLObject pagina) {
+    private EntidadeSenadorTabelaBalancete getTabelaCeaps(EntidadeSenador senador, HTMLObject pagina) {
         HTMLObject dados = pagina.getObjectsById("accordion-ceaps").get(0).getChildrens().get(0);
-        EntidadeSenadorTabela tabela = new EntidadeSenadorTabela();
+        EntidadeSenadorTabelaBalancete tabela = new EntidadeSenadorTabelaBalancete();
         try {
             tabela.titulo = space(dados.getChildrens().get(0).getHtmlSourceAsText());
         } catch (Exception e) {
@@ -220,7 +240,7 @@ public class CrawlerSenador {
             dados = dados.getChildrens().get(2);
             for (HTMLObject in : dados.getChildrens()) {
                 if (in.getTag().equals("tr")) {
-                    EntidadeSenadorTabelaLinha linha = new EntidadeSenadorTabelaLinha();
+                    EntidadeSenadorTabelaBalanceteLinha linha = new EntidadeSenadorTabelaBalanceteLinha();
                     String titulo = space(in.getChildrens().get(0).getHtmlSourceAsText());
                     String conteudo = space(in.getChildrens().get(1).getHtmlSourceAsText());
 
@@ -230,8 +250,12 @@ public class CrawlerSenador {
                     try {
                         String link = space(in.getChildrens().get(1).getChildrens().get(0).getAttribute("href"));
                         if (link != null) {
+                            System.out.println(">> " + link);
                             linha.link = (link.contains("http") ? "" : senador.getLinkPortalTransparencia()) + link;
+
+                            System.out.println(">> " + linha.link);
                         }
+
                     } catch (Exception e) {
                     }
 
@@ -245,7 +269,7 @@ public class CrawlerSenador {
             dados = pagina.getObjectsById("collapse-ceaps").get(0).getChildrens().get(0).getChildrens().get(0);
             dados = dados.getChildrens().get(3);
 
-            EntidadeSenadorTabelaLinha linha = new EntidadeSenadorTabelaLinha();
+            EntidadeSenadorTabelaBalanceteLinha linha = new EntidadeSenadorTabelaBalanceteLinha();
             String titulo = space(dados.getChildrens().get(0).getChildrens().get(0).getHtmlSourceAsText());
             String conteudo = space(dados.getChildrens().get(0).getChildrens().get(1).getHtmlSourceAsText());
             linha.label = titulo;
@@ -254,14 +278,14 @@ public class CrawlerSenador {
         } catch (Exception e) {
         }
         if (tabela.canSave()) {
-            senador.add(tabela);
+            return tabela;
         }
-        return senador;
+        return null;
     }
 
-    private EntidadeSenador getTabelaOutrosGastos(EntidadeSenador senador, HTMLObject pagina) {
+    private EntidadeSenadorTabelaBalancete getTabelaOutrosGastos(EntidadeSenador senador, HTMLObject pagina) {
         HTMLObject dados = pagina.getObjectsById("accordion-outros-gastos").get(0).getChildrens().get(0);
-        EntidadeSenadorTabela tabela = new EntidadeSenadorTabela();
+        EntidadeSenadorTabelaBalancete tabela = new EntidadeSenadorTabelaBalancete();
         try {
             tabela.titulo = space(dados.getChildrens().get(0).getHtmlSourceAsText());
         } catch (Exception e) {
@@ -272,7 +296,7 @@ public class CrawlerSenador {
             dados = dados.getChildrens().get(2);
             for (HTMLObject in : dados.getChildrens()) {
                 if (in.getTag().equals("tr")) {
-                    EntidadeSenadorTabelaLinha linha = new EntidadeSenadorTabelaLinha();
+                    EntidadeSenadorTabelaBalanceteLinha linha = new EntidadeSenadorTabelaBalanceteLinha();
                     String titulo = space(in.getChildrens().get(0).getHtmlSourceAsText());
                     String conteudo = space(in.getChildrens().get(1).getHtmlSourceAsText());
                     linha.label = titulo;
@@ -297,7 +321,7 @@ public class CrawlerSenador {
             dados = pagina.getObjectsById("collapse-outros-gastos").get(0).getChildrens().get(0).getChildrens().get(0);
             dados = dados.getChildrens().get(3);
 
-            EntidadeSenadorTabelaLinha linha = new EntidadeSenadorTabelaLinha();
+            EntidadeSenadorTabelaBalanceteLinha linha = new EntidadeSenadorTabelaBalanceteLinha();
             String titulo = space(dados.getChildrens().get(0).getChildrens().get(0).getHtmlSourceAsText());
             String conteudo = space(dados.getChildrens().get(0).getChildrens().get(1).getHtmlSourceAsText());
             linha.label = titulo;
@@ -306,14 +330,14 @@ public class CrawlerSenador {
         } catch (Exception e) {
         }
         if (tabela.canSave()) {
-            senador.add(tabela);
+            return tabela;
         }
-        return senador;
+        return null;
     }
 
-    private EntidadeSenador getTabelaBeneficios(EntidadeSenador senador, HTMLObject pagina) {
+    private EntidadeSenadorTabelaBalancete getTabelaBeneficios(EntidadeSenador senador, HTMLObject pagina) {
         HTMLObject dados = pagina.getObjectsById("accordion-outros").get(0).getChildrens().get(0);
-        EntidadeSenadorTabela tabela = new EntidadeSenadorTabela();
+        EntidadeSenadorTabelaBalancete tabela = new EntidadeSenadorTabelaBalancete();
         try {
             tabela.titulo = space(dados.getChildrens().get(0).getHtmlSourceAsText());
         } catch (Exception e) {
@@ -324,7 +348,7 @@ public class CrawlerSenador {
             dados = dados.getChildrens().get(2);
             for (HTMLObject in : dados.getChildrens()) {
                 if (in.getTag().equals("tr")) {
-                    EntidadeSenadorTabelaLinha linha = new EntidadeSenadorTabelaLinha();
+                    EntidadeSenadorTabelaBalanceteLinha linha = new EntidadeSenadorTabelaBalanceteLinha();
                     String titulo = space(in.getChildrens().get(0).getHtmlSourceAsText());
                     String conteudo = space(in.getChildrens().get(1).getHtmlSourceAsText());
                     linha.label = titulo;
@@ -344,14 +368,14 @@ public class CrawlerSenador {
         }
 
         if (tabela.canSave()) {
-            senador.add(tabela);
+            return tabela;
         }
-        return senador;
+        return null;
     }
 
-    private EntidadeSenador getTabelaPessoal(EntidadeSenador senador, HTMLObject pagina) {
+    private EntidadeSenadorTabelaBalancete getTabelaPessoal(EntidadeSenador senador, HTMLObject pagina) {
         HTMLObject dados = pagina.getObjectsById("accordion-pessoal").get(0).getChildrens().get(0);
-        EntidadeSenadorTabela tabela = new EntidadeSenadorTabela();
+        EntidadeSenadorTabelaBalancete tabela = new EntidadeSenadorTabelaBalancete();
         try {
             tabela.titulo = space(dados.getChildrens().get(0).getHtmlSourceAsText());
         } catch (Exception e) {
@@ -362,7 +386,7 @@ public class CrawlerSenador {
             dados = dados.getChildrens().get(2);
             for (HTMLObject in : dados.getChildrens()) {
                 if (in.getTag().equals("tr")) {
-                    EntidadeSenadorTabelaLinha linha = new EntidadeSenadorTabelaLinha();
+                    EntidadeSenadorTabelaBalanceteLinha linha = new EntidadeSenadorTabelaBalanceteLinha();
                     String titulo = space(in.getChildrens().get(0).getHtmlSourceAsText());
                     String conteudo = space(in.getChildrens().get(1).getHtmlSourceAsText());
                     linha.label = titulo;
@@ -382,14 +406,14 @@ public class CrawlerSenador {
         }
 
         if (tabela.canSave()) {
-            senador.add(tabela);
+            return tabela;
         }
-        return senador;
+        return null;
     }
 
-    private EntidadeSenador getTabelaSubsidios(EntidadeSenador senador, HTMLObject pagina) {
+    private EntidadeSenadorTabelaBalancete getTabelaSubsidios(EntidadeSenador senador, HTMLObject pagina) {
         HTMLObject dados = pagina.getObjectsById("accordion-subsidios").get(0).getChildrens().get(0);
-        EntidadeSenadorTabela tabela = new EntidadeSenadorTabela();
+        EntidadeSenadorTabelaBalancete tabela = new EntidadeSenadorTabelaBalancete();
         try {
             tabela.titulo = space(dados.getChildrens().get(0).getHtmlSourceAsText());
         } catch (Exception e) {
@@ -400,7 +424,7 @@ public class CrawlerSenador {
             dados = dados.getChildrens().get(2);
             for (HTMLObject in : dados.getChildrens()) {
                 if (in.getTag().equals("tr")) {
-                    EntidadeSenadorTabelaLinha linha = new EntidadeSenadorTabelaLinha();
+                    EntidadeSenadorTabelaBalanceteLinha linha = new EntidadeSenadorTabelaBalanceteLinha();
                     String titulo = space(in.getChildrens().get(0).getHtmlSourceAsText());
                     String conteudo = space(in.getChildrens().get(1).getHtmlSourceAsText());
                     linha.label = titulo;
@@ -420,9 +444,9 @@ public class CrawlerSenador {
         }
 
         if (tabela.canSave()) {
-            senador.add(tabela);
+            return tabela;
         }
-        return senador;
+        return null;
     }
 
     private EntidadeSenador getElementoDadosPessoais(EntidadeSenador senador, HTMLObject pagina) throws Exception {
@@ -493,8 +517,9 @@ public class CrawlerSenador {
         String nova = pagina.getObjectsById("conteudo_transparencia").get(0).getHtmlSourceAsHtml();
         HTMLObject nPagina = HTMLObject.parse(nova);
         nova = space(nPagina.getObjectsByClass("dropdown-menu").get(0).getHtmlSourceAsText());
+
         ArrayList<String> anosDisponiveis = new ArrayList<>();
-        for (String in : nova.split(",")) {
+        for (String in : nova.split(" ")) {
             anosDisponiveis.add(in);
         }
         senador.setAnosDisponiveis(anosDisponiveis);
@@ -529,8 +554,8 @@ public class CrawlerSenador {
 
     private EntidadeSenador getTabelaAno(String url, EntidadeSenador senador, HTMLObject pagina) {
         HTMLObject dados = pagina.getObjectsById("conteudo_transparencia").get(0);//.getChildrens().get(0);
-        EntidadeSenadorAno outter = new EntidadeSenadorAno();
-        EntidadeSenadorTabelaAno tabela = new EntidadeSenadorTabelaAno();
+        EntidadeSenadorResumo outter = new EntidadeSenadorResumo();
+        EntidadeSenadorTabelaResumo tabela = new EntidadeSenadorTabelaResumo();
         try {
             outter.titulo = space(dados.getChildrens().get(0).getHtmlSourceAsText());
         } catch (Exception e) {
@@ -544,7 +569,7 @@ public class CrawlerSenador {
 
         for (HTMLObject in : tabelaHTML.getChildrens()) {
             if (in.getTag().equals("tr")) {
-                EntidadeSenadorTabelaAnoLinha linha = new EntidadeSenadorTabelaAnoLinha();
+                EntidadeSenadorTabelaResumoLinha linha = new EntidadeSenadorTabelaResumoLinha();
                 linha.label = space(in.getChildrens().get(0).getHtmlSourceAsText());
                 linha.conteudo = space(in.getChildrens().get(1).getHtmlSourceAsText());
                 try {
@@ -579,8 +604,8 @@ public class CrawlerSenador {
 
     private EntidadeSenador getTabelaMes(String url, EntidadeSenador senador, HTMLObject pagina) {
         HTMLObject dados = pagina.getObjectsById("conteudo_transparencia").get(0);//.getChildrens().get(0);
-        EntidadeSenadorMes inner = new EntidadeSenadorMes();
-        EntidadeSenadorTabelaMes tabela = new EntidadeSenadorTabelaMes();
+        EntidadeSenadorDetalhe inner = new EntidadeSenadorDetalhe();
+        EntidadeSenadorTabelaDetalhe tabela = new EntidadeSenadorTabelaDetalhe();
         try {
             inner.titulo = space(dados.getChildrens().get(0).getHtmlSourceAsText());
         } catch (Exception e) {
@@ -590,7 +615,7 @@ public class CrawlerSenador {
 
         for (HTMLObject in : tabelaHTML.getChildrens()) {
             if (in.getTag().equals("tr")) {
-                EntidadeSenadorTabelaMesLinha linha = new EntidadeSenadorTabelaMesLinha();
+                EntidadeSenadorTabelaDetalheLinha linha = new EntidadeSenadorTabelaDetalheLinha();
                 linha.doc = space(in.getChildrens().get(0).getHtmlSourceAsText());
                 linha.fornecedor = space(in.getChildrens().get(1).getHtmlSourceAsText());
                 linha.descricao = space(in.getChildrens().get(2).getHtmlSourceAsText());

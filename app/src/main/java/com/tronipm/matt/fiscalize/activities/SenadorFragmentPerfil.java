@@ -16,27 +16,34 @@ import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 import com.tronipm.matt.fiscalize.utils.MLRoundedImageView;
 
 import java.io.IOException;
+import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SenadorFragmentPerfil.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SenadorFragmentPerfil#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SenadorFragmentPerfil extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
     private EntidadeSenador senador;
+    private String ano;
 
+    public View currentView;
 //    private OnFragmentInteractionListener mListener;
 
     public SenadorFragmentPerfil() {
         // Required empty public constructor
+    }
+
+    public void setSenador(EntidadeSenador senador) {
+        this.senador = senador;
+    }
+
+    public void setAno(String ano) {
+        if (ano == null) {
+            ano = senador.getAnosDisponiveis().get(senador.getAnosDisponiveis().size() - 1);
+        }
+        this.ano = ano;
     }
 
     /**
@@ -47,10 +54,11 @@ public class SenadorFragmentPerfil extends Fragment {
      * @return A new instance of fragment SenadorFragmentPerfil.
      */
     // TODO: Rename and change types and number of parameters
-    public static SenadorFragmentPerfil newInstance(EntidadeSenador senador) {
+    public static SenadorFragmentPerfil newInstance(EntidadeSenador senador, String ano) {
         SenadorFragmentPerfil fragment = new SenadorFragmentPerfil();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1, senador);
+        args.putString(ARG_PARAM2, ano);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,6 +68,7 @@ public class SenadorFragmentPerfil extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             senador = (EntidadeSenador) getArguments().getSerializable(ARG_PARAM1);
+            ano = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -67,41 +76,42 @@ public class SenadorFragmentPerfil extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_senador_fragment_perfil, container, false);
-        populate(view);
-        return view;
+        currentView = inflater.inflate(R.layout.fragment_senador_fragment_perfil, container, false);
+        populate();
+        return currentView;
     }
 
-    private void populate(View view) {
+    public void populate() {
 
         try {
-            Picasso.get().load(senador.getLinkFoto()).into((MLRoundedImageView) view.findViewById(R.id.imageView));
+            Picasso.get().load(senador.getLinkFoto()).into((MLRoundedImageView) currentView.findViewById(R.id.imageView));
         } catch (Exception e) {
             e.printStackTrace();
         }
 //        ImageView profilePic = (ImageView)view.findViewById(R.id.imageView);
-
-        TextView nome = (TextView)view.findViewById(R.id.textView_nome);
+        Locale locale = new Locale("pt", "br");
+        TextView nome = (TextView) currentView.findViewById(R.id.textView_nome);
         nome.setText(senador.getNomeCivil());
-        TextView partido = (TextView)view.findViewById(R.id.textView_partido);
+        TextView partido = (TextView) currentView.findViewById(R.id.textView_partido);
         partido.setText(senador.getPartido());
-        TextView dtNascimento = (TextView)view.findViewById(R.id.textView7);
+        TextView dtNascimento = (TextView) currentView.findViewById(R.id.textView7);
         dtNascimento.setText(senador.getDataNascimento());
-        TextView naturalidade = (TextView)view.findViewById(R.id.textView9);
-        naturalidade.setText(senador.getNaturalidade());
-        TextView gabinete = (TextView)view.findViewById(R.id.textView11);
-        gabinete.setText(senador.getGabinete());
-        TextView telefones = (TextView)view.findViewById(R.id.textView13);
+        TextView naturalidade = (TextView) currentView.findViewById(R.id.textView9);
+        naturalidade.setText(senador.getNaturalidade().toUpperCase(locale));
+        TextView gabinete = (TextView) currentView.findViewById(R.id.textView11);
+        gabinete.setText(senador.getGabinete().toUpperCase(locale));
+        TextView telefones = (TextView) currentView.findViewById(R.id.textView13);
         telefones.setText(senador.getTelefones());
-        TextView fax = (TextView)view.findViewById(R.id.textView15);
+        TextView fax = (TextView) currentView.findViewById(R.id.textView15);
         fax.setText(senador.getFax());
-        TextView email = (TextView)view.findViewById(R.id.textView17);
-        email.setText(senador.getEmail());
-        TextView site = (TextView)view.findViewById(R.id.textView19);
+        TextView email = (TextView) currentView.findViewById(R.id.textView17);
+        email.setText(senador.getEmail().toUpperCase(locale));
+        TextView site = (TextView) currentView.findViewById(R.id.textView19);
         site.setText(senador.getSitePessoal());
-        TextView end = (TextView)view.findViewById(R.id.textView21);
+        TextView end = (TextView) currentView.findViewById(R.id.textView21);
         end.setText(senador.getEscritorioApoio());
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {

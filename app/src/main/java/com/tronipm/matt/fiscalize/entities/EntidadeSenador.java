@@ -1,12 +1,16 @@
 package com.tronipm.matt.fiscalize.entities;
 
-import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorAno;
-import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorMes;
-import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorTabela;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorBalancete;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorResumo;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorDetalhe;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
+
+/**
+ * @author Matt
+ */
 public class EntidadeSenador implements Serializable {
 
     private String id = null;
@@ -31,32 +35,66 @@ public class EntidadeSenador implements Serializable {
     private String linkPortalTransparencia = null;
 
     private ArrayList<String> anosDisponiveis = null;
-    private ArrayList<EntidadeSenadorTabela> tabelas = null;
-    private ArrayList<EntidadeSenadorAno> conteudoAno = null;
-    private ArrayList<EntidadeSenadorMes> conteudoMes = null;
+    private ArrayList<EntidadeSenadorBalancete> conteudoBalancete = null;
 
-    public void add(EntidadeSenadorTabela tabela) {
-        if (tabelas == null) {
-            tabelas = new ArrayList<>();
+    private ArrayList<EntidadeSenadorResumo> conteudoResumo = null;
+    private ArrayList<EntidadeSenadorDetalhe> conteudoDetalhe = null;
+
+    public void add(EntidadeSenadorBalancete tabela) {
+        if (conteudoBalancete == null) {
+            conteudoBalancete = new ArrayList<>();
         }
 
-        tabelas.add(tabela);
+        boolean flag = true;
+        for (int i = 0; i < conteudoBalancete.size(); i++) {
+            if (conteudoBalancete.get(i).ano != null
+                    && conteudoBalancete.get(i).ano.equals(tabela.ano)) {
+                conteudoBalancete.set(i, tabela);
+                flag = false;
+                break;
+            }
+        }
+        if (flag) {
+            conteudoBalancete.add(tabela);
+        }
     }
 
-    public void add(EntidadeSenadorAno ano) {
-        if (conteudoAno == null) {
-            conteudoAno = new ArrayList<>();
+    public void add(EntidadeSenadorResumo ano) {
+        if (conteudoResumo == null) {
+            conteudoResumo = new ArrayList<>();
         }
 
-        conteudoAno.add(ano);
+        boolean flag = true;
+        for (int i = 0; i < conteudoResumo.size(); i++) {
+            if (conteudoResumo.get(i).titulo != null
+                    && conteudoResumo.get(i).titulo.equals(ano.titulo)) {
+                conteudoResumo.set(i, ano);
+                flag = false;
+                break;
+            }
+        }
+        if (flag) {
+            conteudoResumo.add(ano);
+        }
     }
 
-    public void add(EntidadeSenadorMes mes) {
-        if (conteudoMes == null) {
-            conteudoMes = new ArrayList<>();
+    public void add(EntidadeSenadorDetalhe mes) {
+        if (conteudoDetalhe == null) {
+            conteudoDetalhe = new ArrayList<>();
         }
 
-        conteudoMes.add(mes);
+        boolean flag = true;
+        for (int i = 0; i < conteudoDetalhe.size(); i++) {
+            if (conteudoDetalhe.get(i).titulo != null
+                    && conteudoDetalhe.get(i).titulo.equals(mes.titulo)) {
+                conteudoDetalhe.set(i, mes);
+                flag = false;
+                break;
+            }
+        }
+        if (flag) {
+            conteudoDetalhe.add(mes);
+        }
     }
 
     @Override
@@ -89,21 +127,29 @@ public class EntidadeSenador implements Serializable {
         a += "linkMateriasRelatadas: " + linkMateriasRelatadas + "\r\n";
         a += "linkVotacoes: " + linkVotacoes + "\r\n";
         a += "linkPortalTransparencia: " + linkPortalTransparencia + "\r\n";
-
-        a += "ANO: ";
-        if (conteudoAno != null) {
+        a += "BALANCETE: ";
+        if (conteudoBalancete != null) {
             a += "\r\n";
-            for (EntidadeSenadorAno in : conteudoAno) {
+            for (EntidadeSenadorBalancete in : conteudoBalancete) {
+                a += in.toString();
+            }
+        } else {
+            a += "null";
+        }
+        a += "RESUMO: ";
+        if (conteudoResumo != null) {
+            a += "\r\n";
+            for (EntidadeSenadorResumo in : conteudoResumo) {
                 a += in.toString();
             }
         } else {
             a += "null";
         }
 
-        a += "MES: ";
-        if (conteudoMes != null) {
+        a += "DETALHE: ";
+        if (conteudoDetalhe != null) {
             a += "\r\n";
-            for (EntidadeSenadorMes in : conteudoMes) {
+            for (EntidadeSenadorDetalhe in : conteudoDetalhe) {
                 a += in.toString();
             }
         } else {
@@ -250,6 +296,9 @@ public class EntidadeSenador implements Serializable {
     }
 
     public String getLinkPortalTransparencia() {
+        if (linkPortalTransparencia.contains("?ano")) {
+            return linkPortalTransparencia.split("\\?ano")[0];
+        }
         return linkPortalTransparencia;
     }
 
@@ -265,28 +314,28 @@ public class EntidadeSenador implements Serializable {
         this.anosDisponiveis = anosDisponiveis;
     }
 
-    public ArrayList<EntidadeSenadorTabela> getTabelas() {
-        return tabelas;
+    public ArrayList<EntidadeSenadorBalancete> getConteudoBalancete() {
+        return conteudoBalancete;
     }
 
-    public void setTabelas(ArrayList<EntidadeSenadorTabela> tabelas) {
-        this.tabelas = tabelas;
+    public void setConteudoBalancete(ArrayList<EntidadeSenadorBalancete> conteudoBalancete) {
+        this.conteudoBalancete = conteudoBalancete;
     }
 
-    public ArrayList<EntidadeSenadorAno> getConteudoAno() {
-        return conteudoAno;
+    public ArrayList<EntidadeSenadorResumo> getConteudoResumo() {
+        return conteudoResumo;
     }
 
-    public void setConteudoAno(ArrayList<EntidadeSenadorAno> conteudoAno) {
-        this.conteudoAno = conteudoAno;
+    public void setConteudoResumo(ArrayList<EntidadeSenadorResumo> conteudoResumo) {
+        this.conteudoResumo = conteudoResumo;
     }
 
-    public ArrayList<EntidadeSenadorMes> getConteudoMes() {
-        return conteudoMes;
+    public ArrayList<EntidadeSenadorDetalhe> getConteudoDetalhe() {
+        return conteudoDetalhe;
     }
 
-    public void setConteudoMes(ArrayList<EntidadeSenadorMes> conteudoMes) {
-        this.conteudoMes = conteudoMes;
+    public void setConteudoDetalhe(ArrayList<EntidadeSenadorDetalhe> conteudoDetalhe) {
+        this.conteudoDetalhe = conteudoDetalhe;
     }
 
     public EntidadeSenador() {

@@ -6,10 +6,10 @@ import java.util.ArrayList;
 /**
  * @author Matt
  */
-public class EntidadeSenadorTabelaMes implements Serializable {
+public class EntidadeSenadorTabelaBalancete implements Serializable {
 
     public String titulo = null;
-    public ArrayList<EntidadeSenadorTabelaMesLinha> linhas = new ArrayList<>();
+    public ArrayList<EntidadeSenadorTabelaBalanceteLinha> linhas = new ArrayList<>();
 
     public boolean canSave() {
         if ((titulo == null || titulo.trim().isEmpty()) && linhas.isEmpty()) {
@@ -26,7 +26,7 @@ public class EntidadeSenadorTabelaMes implements Serializable {
     public String toString() {
         String a = "";
         a += "titulo: " + titulo;
-        for (EntidadeSenadorTabelaMesLinha in : linhas) {
+        for (EntidadeSenadorTabelaBalanceteLinha in : linhas) {
             a += in.toString();
         }
         return a;

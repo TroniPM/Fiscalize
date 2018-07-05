@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class Util {
-
+/*
     public static void escreverEmArquivo(String path, String content, boolean isAppend) {
         if (true) {
             return;
@@ -91,5 +91,5 @@ public class Util {
             e.printStackTrace();
         }
         return linhas;
-    }
+    }*/
 }

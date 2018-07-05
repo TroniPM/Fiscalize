@@ -1,15 +1,16 @@
 package com.tronipm.matt.fiscalize.crawlers.entities;
 
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @author Matt
  */
-public class EntidadeSenadorTabelaAno implements Serializable {
+public class EntidadeSenadorTabelaResumo implements Serializable {
 
     public String titulo = null;
-    public ArrayList<EntidadeSenadorTabelaAnoLinha> linhas = new ArrayList<>();
+    public ArrayList<EntidadeSenadorTabelaResumoLinha> linhas = new ArrayList<>();
 
     public boolean canSave() {
         if ((titulo == null || titulo.trim().isEmpty()) && linhas.isEmpty()) {
@@ -26,9 +27,10 @@ public class EntidadeSenadorTabelaAno implements Serializable {
     public String toString() {
         String a = "";
         a += "titulo: " + titulo;
-        for (EntidadeSenadorTabelaAnoLinha in : linhas) {
+        for (EntidadeSenadorTabelaResumoLinha in : linhas) {
             a += in.toString();
         }
         return a;
     }
 }
+
