@@ -62,6 +62,7 @@ public class SenadorActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_atualizar) {
+            new RetrieveListTask(senador, ano).execute();
             return true;
         } else if (id == R.id.action_abrir_web) {
             //TODO verificar isso daqui.
@@ -103,10 +104,8 @@ public class SenadorActivity extends AppCompatActivity {
         //APENAS PARA DEBUG
         if (senador != null) {
             if (senador.getConteudoBalancete() == null) {
-                new RetrieveListTask(senador, null).execute("null");
+                new RetrieveListTask(senador, null).execute();
             } else {
-                SenadorActivity.this.fragOne.populate();
-                SenadorActivity.this.fragTwo.populate();
             }
 
             System.out.println(senador);
@@ -121,9 +120,6 @@ public class SenadorActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-
                 CharSequence[] items = new CharSequence[senador.getAnosDisponiveis().size()];
                 for (int i = 0; i < senador.getAnosDisponiveis().size(); i++) {
                     items[i] = senador.getAnosDisponiveis().get(i);
@@ -133,7 +129,20 @@ public class SenadorActivity extends AppCompatActivity {
                 builder.setTitle("Anos Disponíveis");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        new RetrieveListTask(senador, senador.getAnosDisponiveis().get(item)).execute();
+                        //Apenas pega os dados do banco caso já tenha.
+                        String ano = senador.getAnosDisponiveis().get(item);
+                        boolean flag = true;
+                        for (EntidadeSenadorBalancete in : senador.getConteudoBalancete()) {
+                            if (in.ano.equals(ano)) {
+                                flag = false;
+                                break;
+                            }
+                        }
+                        if (flag) {
+                            new RetrieveListTask(senador, ano).execute();
+                        } else {
+                            SenadorActivity.this.update(senador, ano);
+                        }
                         dialog.dismiss();
                     }
                 });
@@ -192,6 +201,23 @@ public class SenadorActivity extends AppCompatActivity {
 
     private void stopDialog() {
         dialog.dismiss();
+    }
+
+    private void update(EntidadeSenador entd, String ano) {
+
+        SenadorActivity.this.senador = entd;
+        SenadorActivity.this.fragOne.setSenador(entd);
+        SenadorActivity.this.fragTwo.setSenador(entd);
+        SenadorActivity.this.ano = ano;
+        SenadorActivity.this.fragOne.setAno(ano);
+        SenadorActivity.this.fragTwo.setAno(ano);
+
+        SenadorActivity.this.fragOne.populate();
+        SenadorActivity.this.fragTwo.populate();
+
+        SenadorActivity.this.tabLayout.invalidate();
+        SenadorActivity.this.viewPager.invalidate();
+
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -257,21 +283,8 @@ public class SenadorActivity extends AppCompatActivity {
 //                    SenadorActivity.this.get();
                     db.putSenador(senadorDownloaded);
 
-                    SenadorActivity.this.senador = senadorDownloaded;
-                    SenadorActivity.this.fragOne.setSenador(senadorDownloaded);
-                    SenadorActivity.this.fragTwo.setSenador(senadorDownloaded);
-                    SenadorActivity.this.ano = ano;
-                    SenadorActivity.this.fragOne.setAno(ano);
-                    SenadorActivity.this.fragTwo.setAno(ano);
-
-                    SenadorActivity.this.fragOne.populate();
-                    SenadorActivity.this.fragTwo.populate();
-
-                    SenadorActivity.this.tabLayout.invalidate();
-                    SenadorActivity.this.viewPager.invalidate();
-
+                    SenadorActivity.this.update(senadorDownloaded, ano);
                     SenadorActivity.this.stopDialog();
-
                     System.out.println(senadorDownloaded);
                 }
             });

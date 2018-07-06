@@ -1,6 +1,7 @@
 package com.tronipm.matt.fiscalize.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tronipm.matt.fiscalize.R;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorBalancete;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 import com.tronipm.matt.fiscalize.utils.MLRoundedImageView;
 
@@ -97,22 +100,55 @@ public class SenadorFragmentPerfil extends Fragment {
         TextView dtNascimento = (TextView) currentView.findViewById(R.id.textView7);
         dtNascimento.setText(senador.getDataNascimento());
         TextView naturalidade = (TextView) currentView.findViewById(R.id.textView9);
-        naturalidade.setText(senador.getNaturalidade().toUpperCase(locale));
+        if (senador.getNaturalidade() != null) {
+            naturalidade.setText(senador.getNaturalidade().toUpperCase(locale));
+        }
         TextView gabinete = (TextView) currentView.findViewById(R.id.textView11);
-        gabinete.setText(senador.getGabinete().toUpperCase(locale));
+        if (senador.getGabinete() != null) {
+            gabinete.setText(senador.getGabinete().toUpperCase(locale));
+        }
         TextView telefones = (TextView) currentView.findViewById(R.id.textView13);
         telefones.setText(senador.getTelefones());
         TextView fax = (TextView) currentView.findViewById(R.id.textView15);
         fax.setText(senador.getFax());
         TextView email = (TextView) currentView.findViewById(R.id.textView17);
-        email.setText(senador.getEmail().toUpperCase(locale));
+        if (senador.getEmail() != null) {
+            email.setText(senador.getEmail().toUpperCase(locale));
+            email.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts(
+                            "mailto", senador.getEmail(), null));
+                    startActivity(Intent.createChooser(intent, "Enviar e-mail"));
+                }
+            });
+        }
         TextView site = (TextView) currentView.findViewById(R.id.textView19);
-        site.setText(senador.getSitePessoal());
+        if (senador.getSitePessoal() != null) {
+            site.setText(senador.getSitePessoal());
+            site.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String link = senador.getSitePessoal();
+                    if (link != null && !link.isEmpty()) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                        startActivity(browserIntent);
+                    }
+                }
+            });
+        }
         TextView end = (TextView) currentView.findViewById(R.id.textView21);
         end.setText(senador.getEscritorioApoio());
     }
 
-S    // TODO: Rename method, update argument and hook method into UI event
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        this.populate();
+    }
+
+    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
 //        if (mListener != null) {
 //            mListener.onFragmentInteraction(uri);

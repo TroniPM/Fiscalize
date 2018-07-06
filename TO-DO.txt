@@ -1,5 +1,4 @@
 TODO: 
 	Fazer tela de SOBRE.
-	Botão refresh de dados na tela de PERFIL
-	Botão abrir na web na tela de PERFIL
-	Fazer Tela de RESUMO
+	Fazer tela de RESUMO.
+	Fazer tela de DETALHE.
