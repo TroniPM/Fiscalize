@@ -2,20 +2,16 @@ package com.tronipm.matt.fiscalize.activities;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.tronipm.matt.fiscalize.R;
+import com.tronipm.matt.fiscalize.adapters.DrawableProvider;
 import com.tronipm.matt.fiscalize.adapters.SenadorListCustomAdapter;
 import com.tronipm.matt.fiscalize.crawlers.CrawlerSenador;
 import com.tronipm.matt.fiscalize.database.TinyDB;
@@ -24,14 +20,15 @@ import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 import java.util.ArrayList;
 
 public class SenadorListActivity extends AppCompatActivity {
-
+    private ProgressDialog dialog = null;
     private TinyDB db = null;
     private CrawlerSenador crawler = null;
     private ArrayList<EntidadeSenador> list = null;
-    private SenadorListCustomAdapter adapter = null;
-    private ProgressDialog dialog = null;
+
     private int tries = 1;
     private static final int limit = 3;
+
+    private TextDrawable.IBuilder mDrawableBuilder = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +50,50 @@ public class SenadorListActivity extends AppCompatActivity {
                 System.out.println(in);
             }
         }
+
+        // initialize the builder based on the "TYPE"
+//        int type = intent.getIntExtra(MainActivity.TYPE, DrawableProvider.SAMPLE_RECT);
+//        switch (type) {
+//            case DrawableProvider.SAMPLE_RECT:
+//                mDrawableBuilder = TextDrawable.builder()
+//                        .rect();
+//                break;
+//            case DrawableProvider.SAMPLE_ROUND_RECT:
+//                mDrawableBuilder = TextDrawable.builder()
+//                        .roundRect(10);
+//                break;
+//            case DrawableProvider.SAMPLE_ROUND:
+//                mDrawableBuilder = TextDrawable.builder()
+//                        .round();
+//                break;
+//            case DrawableProvider.SAMPLE_RECT_BORDER:
+//                mDrawableBuilder = TextDrawable.builder()
+//                        .beginConfig()
+//                        .withBorder(4)
+//                        .endConfig()
+//                        .rect();
+//                break;
+//            case DrawableProvider.SAMPLE_ROUND_RECT_BORDER:
+//                mDrawableBuilder = TextDrawable.builder()
+//                        .beginConfig()
+//                        .withBorder(4)
+//                        .endConfig()
+//                        .roundRect(10);
+//                break;
+//            case DrawableProvider.SAMPLE_ROUND_BORDER:
+//                mDrawableBuilder = TextDrawable.builder()
+//                        .beginConfig()
+//                        .withBorder(4)
+//                        .endConfig()
+//                        .round();
+//                break;
+//        }
+        mDrawableBuilder = TextDrawable.builder()
+                .beginConfig()
+                .withBorder(4)
+                .endConfig()
+                .roundRect(10);
+        // init the list view and its adapter
         refresh();
     }
 
@@ -81,21 +122,8 @@ public class SenadorListActivity extends AppCompatActivity {
 
     private void refresh() {
         if (list != null && !list.isEmpty()) {
-
             ListView listView = (ListView) findViewById(R.id.list);
-            adapter = new SenadorListCustomAdapter(list, this);
-
-            listView.setAdapter(adapter);
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    EntidadeSenador dataModel = list.get(position);
-
-                    Snackbar.make(view, dataModel.getNomeCivil() + "\n" + dataModel.getPartido() + "\n" + dataModel.getId(), Snackbar.LENGTH_LONG)
-                            .setAction("No action", null).show();
-                }
-            });
+            listView.setAdapter(new SenadorListCustomAdapter(mDrawableBuilder, new TinyDB(this).getListSenador(), this));
 
             stopDialog();
         } else {
@@ -109,9 +137,6 @@ public class SenadorListActivity extends AppCompatActivity {
 
     //https://stackoverflow.com/questions/6343166/how-do-i-fix-android-os-networkonmainthreadexception
     class RetrieveListTask extends AsyncTask<String, Void, ArrayList<EntidadeSenador>> {
-
-        private Exception exception;
-
         protected ArrayList<EntidadeSenador> doInBackground(String... urls) {
             try {
                 return crawler.conn_getListSenadores();

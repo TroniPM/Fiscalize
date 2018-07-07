@@ -2,76 +2,72 @@ package com.tronipm.matt.fiscalize.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
-import android.view.LayoutInflater;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bumptech.glide.Glide;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 import com.tronipm.matt.fiscalize.R;
 import com.tronipm.matt.fiscalize.activities.SenadorActivity;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> /*implements View.OnClickListener*/ {
+public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> {
 
     private ArrayList<EntidadeSenador> dataSet;
     private Context mContext;
+    private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
+    private TextDrawable.IBuilder mDrawableBuilder;
 
-    // View lookup cache
-    private class ViewHolder {
-        int position = -1;
-        TextView txtNome;
-        TextView txtPartido;
-        ImageView info;
-    }
-
-    public SenadorListCustomAdapter(ArrayList<EntidadeSenador> data, Context context) {
+    public SenadorListCustomAdapter(TextDrawable.IBuilder mDrawableBuilder, ArrayList<EntidadeSenador> data, Context context) {
         super(context, R.layout.row_item, data);
         this.dataSet = data;
+        this.mDrawableBuilder = mDrawableBuilder;
         this.mContext = context;
 
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
-        EntidadeSenador dataModel = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolder viewHolder; // view lookup cache stored in tag
+    public int getCount() {
+        return dataSet.size();
+    }
 
-        final int pos = position;
+    @Override
+    public EntidadeSenador getItem(int position) {
+        return dataSet.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final ViewHolder holder;
         if (convertView == null) {
-
-            viewHolder = new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.row_item, parent, false);
-            viewHolder.txtNome = (TextView) convertView.findViewById(R.id.name);
-            viewHolder.txtPartido = (TextView) convertView.findViewById(R.id.type);
-            viewHolder.info = (ImageView) convertView.findViewById(R.id.item_info);
-            viewHolder.info.setTag("" + position);
-
-            viewHolder.position = pos;
-
-            convertView.setTag(viewHolder);
+            convertView = View.inflate(mContext, R.layout.row_senador_listactivity, null);
+            holder = new ViewHolder(convertView);
+            convertView.setTag(holder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.txtNome.setText(dataModel.getNomeCivil());
-        viewHolder.txtPartido.setText(dataModel.getPartido());
-        viewHolder.position = pos;
+        final EntidadeSenador item = getItem(position);
 
-        if (dataModel.getLinkFoto() != null) {
+        holder.textView.setText(item.getNomeCivil());
+        holder.textView2.setText(item.getPartido());
+        TextDrawable drawable = mDrawableBuilder.build(String.valueOf(item.getNomeCivil().charAt(0)), mColorGenerator.getColor(item.getNomeCivil()));
+        holder.imageView.setImageDrawable(drawable);
+        holder.view.setBackgroundColor(Color.TRANSPARENT);
+
+        if (item.getLinkFoto() != null) {
 //            try {
 //                Bitmap bitmap = Picasso.get().load(dataSet.get(position).getLinkFoto()).get();
 //                if (dataSet.get(position).getLinkFoto().equals(dataSet.get(viewHolder.position).getLinkFoto())) {
@@ -80,7 +76,7 @@ public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> /*im
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
-            //Glide.with(mContext).load(dataSet.get(position).getLinkFoto()).into(viewHolder.info);
+            Glide.with(mContext).load(dataSet.get(position).getLinkFoto()).into(holder.imageView);
 //            new ThumbnailTask(pos, dataSet.get(pos).getLinkFoto(), viewHolder)
 //                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
 //            new ThumbnailTask(pos, dataModel.getLinkFoto(), viewHolder).execute();
@@ -89,51 +85,28 @@ public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> /*im
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Object object = getItem(pos);
-                EntidadeSenador dataModel = (EntidadeSenador) object;
-
                 Intent intent = new Intent(mContext, SenadorActivity.class);
-                intent.putExtra(SenadorActivity.PARAM1, dataModel);
+                intent.putExtra(SenadorActivity.PARAM1, item);
                 mContext.startActivity(intent);
             }
         });
+
         return convertView;
     }
 
-    class ThumbnailTask extends AsyncTask<Void, Void, Bitmap> {
-        private final int mPosition;
-        private final String mLink;
-        private final ViewHolder mHolder;
+    private class ViewHolder {
+        private View view;
+        private ImageView imageView;
+        private TextView textView;
+        private TextView textView2;
 
-        public ThumbnailTask(int position, String link, ViewHolder holder) {
-            mPosition = position;
-            mHolder = holder;
-            mLink = link;
-        }
-
-        @Override
-        protected Bitmap doInBackground(Void... arg0) {
-            Bitmap bitmap = null;
-            try {
-                bitmap = Picasso.get().load(mLink).get();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return bitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            try {
-                if (dataSet.get(mPosition).getLinkFoto().equals(mLink)
-                        && mHolder.position == mPosition
-                        && mHolder.info.getTag().equals("" + mPosition)) {
-
-                    mHolder.info.setImageBitmap(bitmap);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        private ViewHolder(View view) {
+            this.view = view;
+            this.imageView = (ImageView) view.findViewById(R.id.imageView);
+            this.textView = (TextView) view.findViewById(R.id.textView);
+            this.textView2 = (TextView) view.findViewById(R.id.textView2);
         }
     }
 }
+
+
