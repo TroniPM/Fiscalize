@@ -147,14 +147,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="start"
-            android:text="Informações"
             android:textAlignment="textStart"
-            android:textColor="@android:color/white"
-            android:textSize="24sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/view" />
+
+        <!--android:textColor="@android:color/white"-->
+        <!--android:textStyle="bold"-->
+        <!--android:textSize="24sp"-->
+        <!--android:text="Informações"-->
 
         <View
             android:id="@+id/view2"

@@ -88,6 +88,7 @@ public class SenadorFragmentGastos extends Fragment {
 
     public void populate() {
         expandableListView = (ExpandableListView) currentView.findViewById(R.id.expandableListView);
+        expandableListView.setGroupIndicator(null);
         EntidadeSenadorBalancete balancete = null;
         //Descobrindo em qual ano está
         if (senador.getConteudoBalancete() != null) {

@@ -32,6 +32,13 @@ public class SenadorListActivity extends AppCompatActivity {
     private int tries = 1;
     private static final int limit = 3;
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        refresh();
+    }
+
     private TextDrawable.IBuilder mDrawableBuilder = null;
 
     @Override
@@ -42,18 +49,18 @@ public class SenadorListActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        startDialog();
 
         db = new TinyDB(this);
         crawler = new CrawlerSenador();
 
-        startDialog();
 
         list = db.getListSenador();
-        if (list != null) {
-            for (EntidadeSenador in : list) {
-                System.out.println(in);
-            }
-        }
+//        if (list != null) {
+//            for (EntidadeSenador in : list) {
+//                System.out.println(in);
+//            }
+//        }
 
         // initialize the builder based on the "TYPE"
 //        int type = intent.getIntExtra(MainActivity.TYPE, DrawableProvider.SAMPLE_RECT);
@@ -98,7 +105,6 @@ public class SenadorListActivity extends AppCompatActivity {
                 .endConfig()
                 .roundRect(10);
         // init the list view and its adapter
-        refresh();
     }
 
     private void startDialog() {

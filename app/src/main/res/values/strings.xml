@@ -8,7 +8,8 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_senador_list">Lista de Senadores</string>
     <string name="title_activity_details">DetailsActivity</string>
-    <string name="title_activity_senador">SenadorActivity</string>
+    <string name="title_activity_senador">Lista Senadores</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="informacoes">Informações</string>
 </resources>

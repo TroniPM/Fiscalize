@@ -4,7 +4,9 @@ TODO:
 	Fazer tela de DETALHE.
 	
 	Colocar em que ano a tela atual está mostrando.
+		Balancete FEITO
 	Salvar e mostrar o datetime em que a pesquisa foi feita.
+		Balancete FEITO
 	
 	Adicionar na barra de senadores list activity recurso na actionbar para buscar pelo nome:
 		https://www.journaldev.com/14073/android-multi-search-filter-contacts

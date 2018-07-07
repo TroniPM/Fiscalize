@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -31,7 +32,9 @@ import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorBalancete;
 import com.tronipm.matt.fiscalize.database.TinyDB;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -50,6 +53,7 @@ public class SenadorActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private SenadorFragmentPerfil fragOne = null;
     private SenadorFragmentGastos fragTwo = null;
+    private ViewPagerAdapter adapter = null;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -68,6 +72,25 @@ public class SenadorActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_atualizar) {
             new RetrieveListTask(senador, ano).execute();
+            return true;
+        } else if (id == R.id.action_infos) {
+            String date = null;
+            for (EntidadeSenadorBalancete in : senador.getConteudoBalancete()) {
+                if (in.ano.equals(ano)) {
+                    date = in.date;
+                    break;
+                }
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Dados (" + ano + ") obtidos em:").setMessage(date)
+                    .setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            builder.create().show();
             return true;
         } else if (id == R.id.action_abrir_web) {
             String link = null;
@@ -112,7 +135,7 @@ public class SenadorActivity extends AppCompatActivity {
             } else {
             }
 
-            System.out.println(senador);
+//            System.out.println(senador);
         } else {
             Toast.makeText(this, "Ocorreu um erro. Resete o banco de dados.", Toast.LENGTH_SHORT).show();
             finish();
@@ -160,6 +183,7 @@ public class SenadorActivity extends AppCompatActivity {
         if (ano == null && senador.getAnosDisponiveis() != null && senador.getAnosDisponiveis().size() > 0) {
             ano = senador.getAnosDisponiveis().get(senador.getAnosDisponiveis().size() - 1);
         }
+
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 
@@ -169,12 +193,12 @@ public class SenadorActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
         fragOne = SenadorFragmentPerfil.newInstance(senador, ano);
         fragTwo = SenadorFragmentGastos.newInstance(senador, ano);
 
-        adapter.addFragment(fragOne, "");
-        adapter.addFragment(fragTwo, "");
+        adapter.addFragment(fragOne, getResources().getString(R.string.informacoes).toUpperCase());
+        adapter.addFragment(fragTwo, ano == null ? "ano" : ano);
         viewPager.setAdapter(adapter);
     }
 
@@ -209,6 +233,10 @@ public class SenadorActivity extends AppCompatActivity {
 
     private void update(EntidadeSenador entd, String ano) {
 
+        ((ViewPagerAdapter) adapter).getFragmentTitleList().set(1, ano);
+        adapter.notifyDataSetChanged();
+        setupViewPager(tabLayout);
+
         SenadorActivity.this.senador = entd;
         SenadorActivity.this.fragOne.setSenador(entd);
         SenadorActivity.this.fragTwo.setSenador(entd);
@@ -232,6 +260,10 @@ public class SenadorActivity extends AppCompatActivity {
             super(manager);
         }
 
+        public List<String> getFragmentTitleList() {
+            return this.mFragmentTitleList;
+        }
+
         @Override
         public Fragment getItem(int position) {
             return mFragmentList.get(position);
@@ -245,6 +277,12 @@ public class SenadorActivity extends AppCompatActivity {
         public void addFragment(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public int getItemPosition(@NonNull Object item) {
+            return POSITION_NONE;
+//          return super.getItemPosition(item);
         }
 
         @Override
@@ -286,10 +324,11 @@ public class SenadorActivity extends AppCompatActivity {
                 public void run() {
 //                    SenadorActivity.this.get();
                     db.putSenador(senadorDownloaded);
-
-                    SenadorActivity.this.update(senadorDownloaded, ano);
+                    String anoAux = senadorDownloaded.getAnosDisponiveis().get(senadorDownloaded.getAnosDisponiveis().size() - 1);
+                    SenadorActivity.this.update(senadorDownloaded,
+                            ano == null ? anoAux : ano);
                     SenadorActivity.this.stopDialog();
-                    System.out.println(senadorDownloaded);
+//                    System.out.println(senadorDownloaded);
                 }
             });
         }

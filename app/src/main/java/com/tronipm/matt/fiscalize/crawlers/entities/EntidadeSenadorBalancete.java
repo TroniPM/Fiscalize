@@ -12,6 +12,7 @@ public class EntidadeSenadorBalancete implements Serializable {
 
     public String ano = null;
     public String link = null;
+    public String date = null;
     public ArrayList<EntidadeSenadorTabelaBalancete> tabela = null;
 
     public EntidadeSenadorBalancete() {
@@ -23,6 +24,7 @@ public class EntidadeSenadorBalancete implements Serializable {
         String a = "";
         a += "ano: " + ano + "\r\n";
         a += "link: " + link + "\r\n";
+        a += "date: " + date + "\r\n";
         if (tabela != null) {
             a += "tabela: \r\n" + tabela.toString() + "\r\n";
         } else {

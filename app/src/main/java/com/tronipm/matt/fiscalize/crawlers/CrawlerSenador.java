@@ -14,7 +14,9 @@ import com.tronipm.matt.fiscalize.crawlers.web.Browser;
 import com.tronipm.matt.fiscalize.crawlers.web.HTMLObject;
 import com.tronipm.matt.fiscalize.crawlers.web.Util;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by PMateus on 07/07/2018.
@@ -111,6 +113,7 @@ public class CrawlerSenador {
 //        EntidadeSenador senador = new EntidadeSenador();
 //        senador.setId(id);
 
+        Date date = new Date();
         HTMLObject pagina;
 
         Browser b = new Browser();
@@ -158,6 +161,7 @@ public class CrawlerSenador {
 
         EntidadeSenadorBalancete balancete = new EntidadeSenadorBalancete();
         balancete.link = url;
+        balancete.date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(date);
         balancete.ano = ano != null ? ano
                 : senador.getAnosDisponiveis().get(senador.getAnosDisponiveis().size() - 1);
         senador.add(balancete);

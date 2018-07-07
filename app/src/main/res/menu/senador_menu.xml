@@ -4,9 +4,14 @@
     <item
         android:id="@+id/action_atualizar"
         android:title="Atualizar"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_refresh"
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_abrir_web"
         android:title="Abrir na WEB"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_infos"
+        android:title="Informações"
         app:showAsAction="never" />
 </menu>
