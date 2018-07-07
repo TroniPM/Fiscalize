@@ -2,3 +2,14 @@ TODO:
 	Fazer tela de SOBRE.
 	Fazer tela de RESUMO.
 	Fazer tela de DETALHE.
+	
+	Colocar em que ano a tela atual está mostrando.
+	Salvar e mostrar o datetime em que a pesquisa foi feita.
+	
+	Adicionar na barra de senadores list activity recurso na actionbar para buscar pelo nome:
+		https://www.journaldev.com/14073/android-multi-search-filter-contacts
+		
+	Mostrar perfil do candidato como app contacts do android
+		https://stackoverflow.com/questions/11888926/android-implementing-contacts-app-layout
+		https://android.googlesource.com/platform/packages/apps/Contacts.git/+/master
+		https://www.google.com.br/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&ved=2ahUKEwj15J30wIrcAhUIE5AKHX27D8cQjxx6BAgBEAI&url=https%3A%2F%2Fwww.pinterest.com%2Fpin%2F441915782166997135%2F&psig=AOvVaw0xgh-bQjwVJ_QWAMOFXEIL&ust=1530967589542282
