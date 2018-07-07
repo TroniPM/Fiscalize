@@ -1,6 +1,5 @@
 package com.tronipm.matt.fiscalize.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,26 +7,25 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.tronipm.matt.fiscalize.R;
-import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorBalancete;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 import com.tronipm.matt.fiscalize.utils.MLRoundedImageView;
 
-import java.io.IOException;
 import java.util.Locale;
 
+/**
+ * Created by PMateus on 07/07/2018.
+ * For project Fiscalize.
+ * Contact: <paulomatew@gmail.com>
+ */
 public class SenadorFragmentPerfil extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private EntidadeSenador senador;
     private String ano;
 
@@ -56,7 +54,6 @@ public class SenadorFragmentPerfil extends Fragment {
      * @param senador Parameter 1.
      * @return A new instance of fragment SenadorFragmentPerfil.
      */
-    // TODO: Rename and change types and number of parameters
     public static SenadorFragmentPerfil newInstance(EntidadeSenador senador, String ano) {
         SenadorFragmentPerfil fragment = new SenadorFragmentPerfil();
         Bundle args = new Bundle();
@@ -148,7 +145,6 @@ public class SenadorFragmentPerfil extends Fragment {
         this.populate();
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
 //        if (mListener != null) {
 //            mListener.onFragmentInteraction(uri);
@@ -183,7 +179,6 @@ public class SenadorFragmentPerfil extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
 //    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
 //        void onFragmentInteraction(Uri uri);
 //    }
 }

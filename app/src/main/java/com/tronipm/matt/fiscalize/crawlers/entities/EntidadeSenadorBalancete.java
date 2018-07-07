@@ -4,8 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- *
- * @author Matt
+ * Created by PMateus on 07/07/2018.
+ * For project Fiscalize.
+ * Contact: <paulomatew@gmail.com>
  */
 public class EntidadeSenadorBalancete implements Serializable {
 

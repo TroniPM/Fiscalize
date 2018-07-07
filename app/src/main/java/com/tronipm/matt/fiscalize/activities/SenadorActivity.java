@@ -34,6 +34,11 @@ import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by PMateus on 07/07/2018.
+ * For project Fiscalize.
+ * Contact: <paulomatew@gmail.com>
+ */
 public class SenadorActivity extends AppCompatActivity {
     public static final String PARAM1 = "senador";
     private CrawlerSenador crawler = null;
@@ -65,7 +70,6 @@ public class SenadorActivity extends AppCompatActivity {
             new RetrieveListTask(senador, ano).execute();
             return true;
         } else if (id == R.id.action_abrir_web) {
-            //TODO verificar isso daqui.
             String link = null;
             for (EntidadeSenadorBalancete in : senador.getConteudoBalancete()) {
                 if (in.ano.equals(ano)) {

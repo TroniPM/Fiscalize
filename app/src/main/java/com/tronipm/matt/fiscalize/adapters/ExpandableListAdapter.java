@@ -1,4 +1,4 @@
-package com.tronipm.matt.fiscalize.adapters.expandablelistview;
+package com.tronipm.matt.fiscalize.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -9,21 +9,27 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.List;
+
 import com.tronipm.matt.fiscalize.R;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 
+/**
+ * Created by PMateus on 07/07/2018.
+ * For project Fiscalize.
+ * Contact: <paulomatew@gmail.com>
+ */
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
     Context ctx;
-    ArrayList<String> headerCollectionArr;
-    HashMap<String, ArrayList<ExpandableCollection>> holderHash;
+    List<String> headerCollectionArr;
+    HashMap<String, List<ExpandableItem>> holderHash;
 
 
     public ExpandableListAdapter(Context act,
-                                 ArrayList<String> headerCollectionArr,
-                                 HashMap<String, ArrayList<ExpandableCollection>> holderHash) {
+                                 List<String> headerCollectionArr,
+                                 HashMap<String, List<ExpandableItem>> holderHash) {
         this.ctx = act;
         this.headerCollectionArr = headerCollectionArr;
         this.holderHash = holderHash;
@@ -50,7 +56,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-        ExpandableCollection exp_obj = (ExpandableCollection) getChild(groupPosition, childPosition);
+        ExpandableItem exp_obj = (ExpandableItem) getChild(groupPosition, childPosition);
 
         ChildViewHolder viewHolder = new ChildViewHolder();
         if (convertView == null) {
@@ -68,7 +74,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         viewHolder.despesaTitulo.setText(exp_obj.nome);
         viewHolder.despesaValor.setText(exp_obj.valor);
 
-        //Verificação para só aparecer icone de expandir se HOUVER link no ExpandableCollection
+        //Verificação para só aparecer icone de expandir se HOUVER link no ExpandableItem
         if (exp_obj.link == null || exp_obj.link.equals("")) {
             convertView.findViewById(R.id.expListViewL2_imageView).setVisibility(View.INVISIBLE);
         } else {
@@ -82,7 +88,7 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String st = headerCollectionArr.get(groupPosition);
         int i = 0;
         if (holderHash.size() > 0) {
-            ArrayList<ExpandableCollection> ll = holderHash.get(st);
+            List<ExpandableItem> ll = holderHash.get(st);
             if (ll != null) {
                 i = ll.size();
             } else {

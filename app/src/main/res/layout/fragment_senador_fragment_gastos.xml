@@ -5,10 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".activities.SenadorFragmentGastos">
 
-    <!-- TODO: Update blank fragment layout -->
     <ExpandableListView
         android:id="@+id/expandableListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
+
+    <!--android:indicatorLeft="?android:attr/expandableListPreferredItemIndicatorLeft"-->
 
 </FrameLayout>

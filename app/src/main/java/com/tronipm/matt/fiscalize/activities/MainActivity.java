@@ -17,6 +17,11 @@ import android.view.MenuItem;
 
 import com.tronipm.matt.fiscalize.R;
 
+/**
+ * Created by PMateus on 07/07/2018.
+ * For project Fiscalize.
+ * Contact: <paulomatew@gmail.com>
+ */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 

@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.tronipm.matt.fiscalize.R;
-import com.tronipm.matt.fiscalize.adapters.DrawableProvider;
 import com.tronipm.matt.fiscalize.adapters.SenadorListCustomAdapter;
 import com.tronipm.matt.fiscalize.crawlers.CrawlerSenador;
 import com.tronipm.matt.fiscalize.database.TinyDB;
@@ -19,6 +18,11 @@ import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 
 import java.util.ArrayList;
 
+/**
+ * Created by PMateus on 07/07/2018.
+ * For project Fiscalize.
+ * Contact: <paulomatew@gmail.com>
+ */
 public class SenadorListActivity extends AppCompatActivity {
     private ProgressDialog dialog = null;
     private TinyDB db = null;

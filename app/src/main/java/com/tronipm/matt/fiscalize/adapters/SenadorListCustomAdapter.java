@@ -18,6 +18,11 @@ import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 
 import java.util.ArrayList;
 
+/**
+ * Created by PMateus on 07/07/2018.
+ * For project Fiscalize.
+ * Contact: <paulomatew@gmail.com>
+ */
 public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> {
 
     private ArrayList<EntidadeSenador> dataSet;

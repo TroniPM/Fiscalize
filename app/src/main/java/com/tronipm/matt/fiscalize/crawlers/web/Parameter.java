@@ -1,12 +1,9 @@
 package com.tronipm.matt.fiscalize.crawlers.web;
 
-
 /**
- *
- * @author Paulo Mateus
- * @email paulomatew@gmail.com
- * @date 09/04/2018
- *
+ * Created by PMateus on 07/07/2018.
+ * For project Fiscalize.
+ * Contact: <paulomatew@gmail.com>
  */
 public class Parameter {
 

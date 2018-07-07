@@ -1,25 +1,29 @@
 package com.tronipm.matt.fiscalize.activities;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.tronipm.matt.fiscalize.R;
-import com.tronipm.matt.fiscalize.adapters.expandablelistview.ExpandableCollection;
-import com.tronipm.matt.fiscalize.adapters.expandablelistview.ExpandableListAdapter;
+import com.tronipm.matt.fiscalize.adapters.ExpandableItem;
+import com.tronipm.matt.fiscalize.adapters.ExpandableListAdapter;
 import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorBalancete;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+/**
+ * Created by PMateus on 07/07/2018.
+ * For project Fiscalize.
+ * Contact: <paulomatew@gmail.com>
+ */
 public class SenadorFragmentGastos extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -27,10 +31,8 @@ public class SenadorFragmentGastos extends Fragment {
     private ExpandableListView expandableListView;
     private ExpandableListAdapter expandableListAdapter;
 
-    // TODO: Rename and change types of parameters
     private EntidadeSenador senador;
     private String ano;
-
 
     public View currentView = null;
 
@@ -57,7 +59,6 @@ public class SenadorFragmentGastos extends Fragment {
      * @param senador Parameter 1.
      * @return A new instance of fragment SenadorFragmentGastos.
      */
-    // TODO: Rename and change types and number of parameters
     public static SenadorFragmentGastos newInstance(EntidadeSenador senador, String ano) {
         SenadorFragmentGastos fragment = new SenadorFragmentGastos();
         Bundle args = new Bundle();
@@ -86,11 +87,9 @@ public class SenadorFragmentGastos extends Fragment {
     }
 
     public void populate() {
-        ExpandableCollection.key_value = new ArrayList<String>();
-        ExpandableCollection.expandable_main_arr = new ArrayList<ExpandableCollection>();
-        ExpandableCollection.expandable_hashmap = new HashMap<String, ArrayList<ExpandableCollection>>();
-
+        expandableListView = (ExpandableListView) currentView.findViewById(R.id.expandableListView);
         EntidadeSenadorBalancete balancete = null;
+        //Descobrindo em qual ano está
         if (senador.getConteudoBalancete() != null) {
             for (EntidadeSenadorBalancete in : senador.getConteudoBalancete()) {
                 if (in.ano.equals(this.ano)) {
@@ -99,61 +98,49 @@ public class SenadorFragmentGastos extends Fragment {
                 }
             }
         }
+
+        final List<String> titulos = new ArrayList<String>();
+        final HashMap<String, List<ExpandableItem>> vinculacao_titulos_linhas =
+                new HashMap<String, List<ExpandableItem>>();
+
         if (balancete != null) {
+            //Criando objeto para o adapter
             for (int i = 0; i < balancete.tabela.size(); i++) {
-                //Crio o período
-                ExpandableCollection.key_value.add(balancete.tabela.get(i).titulo);
-                ArrayList<ExpandableCollection> arr_obj = new ArrayList<ExpandableCollection>();
+                titulos.add(balancete.tabela.get(i).titulo);
+                List<ExpandableItem> linhas = new ArrayList<ExpandableItem>();
 
                 for (int j = 0; j < balancete.tabela.get(i).linhas.size(); j++) {
                     //Crio a Matéria
-                    arr_obj.add(new ExpandableCollection(
+                    linhas.add(new ExpandableItem(
                             balancete.tabela.get(i).linhas.get(j).label,
                             balancete.tabela.get(i).linhas.get(j).conteudo,
                             balancete.tabela.get(i).linhas.get(j).link));
                 }
-                ExpandableCollection.expandable_hashmap.put(ExpandableCollection.key_value.get(i), arr_obj);
+
+                vinculacao_titulos_linhas.put(titulos.get(i), linhas);
             }
-        }
+            try {
+                expandableListView.removeAllViewsInLayout();
+            } catch (Exception e) {
+            }
+            expandableListAdapter = new ExpandableListAdapter(getActivity(), titulos, vinculacao_titulos_linhas);
+            expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                @Override
+                public boolean onChildClick(ExpandableListView parent, View v,
+                                            int groupPosition, int childPosition, long id) {
 
-        expandableListAdapter = new ExpandableListAdapter(getActivity(),
-                ExpandableCollection.key_value,
-                ExpandableCollection.expandable_hashmap);
-
-        expandableListView = (ExpandableListView) currentView.findViewById(R.id.expandableListView);
-        expandableListView.removeAllViewsInLayout();
-        expandableListView.setAdapter(expandableListAdapter);
-        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-
-                if (ExpandableCollection.key_value != null) {
-                    if (ExpandableCollection.key_value.size() > groupPosition) {
-                        String key = ExpandableCollection.key_value.get(groupPosition);
-
-                        if (ExpandableCollection.expandable_hashmap.size() > 0) {
-                            ExpandableCollection obj_exp = ExpandableCollection.expandable_hashmap
-                                    .get(key).get(childPosition);
-
-                            if (obj_exp.tipo == 1) {
-                                //Abrir link em browser...
-//                                abrirLinkInBrowser(obj_exp.link);
-                            } else {
-                                if (obj_exp.link == null || obj_exp.link.isEmpty()) {
-                                    //Se não tiver link, não faço action.
-                                } else {
-//                                    SenadorFragmentMainYearDetail fragment = SenadorFragmentMainYearDetail.newInstance(obj_exp.link);
-//                                    ((MainActivity) getActivity2()).switchContent(fragment);
-                                }
-                            }
-                        }
+                    String key = titulos.get(groupPosition);
+                    ExpandableItem item = vinculacao_titulos_linhas.get(key).get(childPosition);
+                    if (item.link == null) {
+                        Toast.makeText(SenadorFragmentGastos.this.getActivity(), "Sem link", Toast.LENGTH_SHORT).show();
+                    } else {
+                        //TODO abrir activity de resumo
                     }
+                    return false;
                 }
-                return false;
-            }
-        });
-
+            });
+            expandableListView.setAdapter(expandableListAdapter);
+        }
     }
 
     @Override
@@ -163,7 +150,6 @@ public class SenadorFragmentGastos extends Fragment {
         this.populate();
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {
 //        if (mListener != null) {
 //            mListener.onFragmentInteraction(uri);
@@ -185,7 +171,6 @@ public class SenadorFragmentGastos extends Fragment {
 //        mListener = null;
 //    }
 //    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
 //        void onFragmentInteraction(Uri uri);
 //    }
 }

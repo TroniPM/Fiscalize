@@ -5,11 +5,9 @@ import java.util.Collections;
 import java.util.regex.Pattern;
 
 /**
- *
- * @author Paulo Mateus
- * @email paulomatew@gmail.com
- * @date 09/04/2018
- *
+ * Created by PMateus on 07/07/2018.
+ * For project Fiscalize.
+ * Contact: <paulomatew@gmail.com>
  */
 public class HTMLObject {
 
@@ -162,7 +160,6 @@ public class HTMLObject {
         }
 
         //getting attributes
-        //TODO this
         allObjects.get(0).allObjects = allObjects;
 
         return allObjects.get(0);

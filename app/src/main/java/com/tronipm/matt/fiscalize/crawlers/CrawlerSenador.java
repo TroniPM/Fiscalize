@@ -16,6 +16,11 @@ import com.tronipm.matt.fiscalize.crawlers.web.Util;
 
 import java.util.ArrayList;
 
+/**
+ * Created by PMateus on 07/07/2018.
+ * For project Fiscalize.
+ * Contact: <paulomatew@gmail.com>
+ */
 public class CrawlerSenador {
 
     private static final boolean DEBUG = false;
