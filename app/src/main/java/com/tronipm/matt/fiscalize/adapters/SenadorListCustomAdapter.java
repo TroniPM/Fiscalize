@@ -91,7 +91,7 @@ public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, SenadorBalanceteActivity.class);
-                intent.putExtra(SenadorBalanceteActivity.PARAM1, item);
+                intent.putExtra(SenadorBalanceteActivity.ARG_PARAM1, item);
                 mContext.startActivity(intent);
             }
         });

@@ -15,7 +15,7 @@ public class SenadorResumoActivity extends AppCompatActivity {
     public static final String ARG_PARAM2 = "param2";
 
     private EntidadeSenador senador;
-    private String titulo;
+    private String link;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +36,9 @@ public class SenadorResumoActivity extends AppCompatActivity {
         setTitle("Resumo");
 
         senador = (EntidadeSenador) getIntent().getSerializableExtra(ARG_PARAM1);
-        titulo = getIntent().getStringExtra(ARG_PARAM2);
+        link = getIntent().getStringExtra(ARG_PARAM2);
 
-        System.out.println(">>>>>>> " + titulo);
+        System.out.println(">>>>>>> " + link);
         System.out.println(">>>>>>> " + senador);
     }
 }
