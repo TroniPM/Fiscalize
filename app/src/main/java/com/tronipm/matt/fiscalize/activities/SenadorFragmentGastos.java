@@ -1,5 +1,6 @@
 package com.tronipm.matt.fiscalize.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -135,6 +136,11 @@ public class SenadorFragmentGastos extends Fragment {
                     if (item.link == null) {
                         Toast.makeText(SenadorFragmentGastos.this.getActivity(), "Sem link", Toast.LENGTH_SHORT).show();
                     } else {
+
+                        Intent intent = new Intent(getActivity(), SenadorResumoActivity.class);
+                        intent.putExtra(SenadorResumoActivity.ARG_PARAM1, senador);
+                        intent.putExtra(SenadorResumoActivity.ARG_PARAM2, item.link);
+                        startActivity(intent);
                         //TODO abrir activity de resumo
                     }
                     return false;

@@ -31,13 +31,22 @@
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.SenadorActivity"
+            android:name=".activities.SenadorBalanceteActivity"
             android:label="@string/title_activity_senador"
             android:parentActivityName=".activities.SenadorListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tronipm.matt.fiscalize.activities.SenadorListActivity" />
+        </activity>
+        <activity
+            android:name=".activities.SenadorResumoActivity"
+            android:label="@string/title_activity_senador_resumo"
+            android:parentActivityName=".activities.SenadorBalanceteActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tronipm.matt.fiscalize.activities.SenadorBalanceteActivity" />
         </activity>
     </application>
 

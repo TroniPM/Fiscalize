@@ -45,7 +45,7 @@ public class CrawlerSenador {
 //            ex.printStackTrace();
 //        }
 //    pegar dados do senador
-//        EntidadeSenador senador = c.conn_getSenador("4981", "2018");
+//        EntidadeSenador senador = c.conn_getSenador("4981");
 //        EntidadeSenador senador = c.conn_getSenador("4981");
 //        senador = c.conn_getSenadorAno(senador, senador.getConteudoBalancete().get(0).tabela.get(0).linhas.get(0).link);
 //        senador = c.conn_getSenadorMes(senador, senador.getConteudoResumo().get(0).tabela.linhas.get(0).link);
@@ -588,13 +588,11 @@ public class CrawlerSenador {
                 tabela.linhas.add(linha);
             }
         }
-
         if (tabela.canSave()) {
             outter.tabela = tabela;
 
             senador.add(outter);
         }
-
 //        System.out.println(inner);
         return senador;
     }
