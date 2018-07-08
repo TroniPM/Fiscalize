@@ -1,4 +1,6 @@
-package com.tronipm.matt.fiscalize.crawlers.web;
+package com.tronipm.matt.fiscalize.utils;
+
+import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 
 import java.util.Comparator;
 
@@ -7,10 +9,10 @@ import java.util.Comparator;
  * For project Fiscalize.
  * Contact: <paulomatew@gmail.com>
  */
-public class ComparatorAsc implements Comparator<HTMLObject> {
+public class ComparatorAscSenadores implements Comparator<EntidadeSenador> {
 
     @Override
-    public int compare(HTMLObject obj1, HTMLObject obj2) {
+    public int compare(EntidadeSenador obj1, EntidadeSenador obj2) {
         if (obj1 == obj2) {
             return 0;
         }
@@ -20,6 +22,6 @@ public class ComparatorAsc implements Comparator<HTMLObject> {
         if (obj2 == null) {
             return 1;
         }
-        return (obj1.getLine_start() < obj2.getLine_start()) ? -1 : ((obj1.getLine_start() > obj2.getLine_start()) ? 1 : 0);
+        return obj1.getNomeCivil().compareTo(obj2.getNomeCivil());
     }
 }

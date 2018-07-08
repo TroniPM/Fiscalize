@@ -1,11 +1,16 @@
 package com.tronipm.matt.fiscalize.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -13,10 +18,13 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.tronipm.matt.fiscalize.R;
 import com.tronipm.matt.fiscalize.adapters.SenadorListCustomAdapter;
 import com.tronipm.matt.fiscalize.crawlers.CrawlerSenador;
+import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorBalancete;
 import com.tronipm.matt.fiscalize.database.TinyDB;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
+import com.tronipm.matt.fiscalize.utils.ComparatorAscSenadores;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by PMateus on 07/07/2018.
@@ -32,6 +40,33 @@ public class SenadorListActivity extends AppCompatActivity {
     private int tries = 1;
     private static final int limit = 3;
 
+    private TextDrawable.IBuilder mDrawableBuilder = null;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.senador_list_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_atualizar) {
+            startDialog();
+            new RetrieveListTask().execute();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -39,7 +74,6 @@ public class SenadorListActivity extends AppCompatActivity {
         refresh();
     }
 
-    private TextDrawable.IBuilder mDrawableBuilder = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,8 +195,29 @@ public class SenadorListActivity extends AppCompatActivity {
             SenadorListActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    db.putListSenador(thislist);
-                    SenadorListActivity.this.list = thislist;
+                    ArrayList<EntidadeSenador> senadores = db.getListSenador();
+                    if (senadores != null) {
+                        for (int i = 0; i < senadores.size(); i++) {
+                            boolean flag = true;
+                            for (int j = 0; j < thislist.size(); j++) {
+                                if (thislist.get(i).getId().equals(senadores.get(j).getId())) {
+                                    flag = false;
+                                    break;
+                                }
+                            }
+                            //Caso senador não exista, adiciono ele
+                            if (flag) {
+                                senadores.add(thislist.get(i));
+                            }
+                        }
+                    } else {
+                        senadores = thislist;
+                    }
+                    //Ordenando
+                    Collections.sort(senadores, new ComparatorAscSenadores());
+
+                    db.putListSenador(senadores);
+                    SenadorListActivity.this.list = senadores;
                     SenadorListActivity.this.refresh();
                 }
             });

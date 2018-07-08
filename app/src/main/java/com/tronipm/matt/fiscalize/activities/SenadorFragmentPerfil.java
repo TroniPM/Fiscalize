@@ -91,11 +91,17 @@ public class SenadorFragmentPerfil extends Fragment {
 //        ImageView profilePic = (ImageView)view.findViewById(R.id.imageView);
         Locale locale = new Locale("pt", "br");
         TextView nome = (TextView) currentView.findViewById(R.id.textView_nome);
-        nome.setText(senador.getNomeCivil());
+        if (senador.getNomeCivil() != null) {
+            nome.setText(senador.getNomeCivil());
+        }
         TextView partido = (TextView) currentView.findViewById(R.id.textView_partido);
-        partido.setText(senador.getPartido());
+        if (senador.getPartido() != null) {
+            partido.setText(senador.getPartido());
+        }
         TextView dtNascimento = (TextView) currentView.findViewById(R.id.textView7);
-        dtNascimento.setText(senador.getDataNascimento());
+        if (senador.getDataNascimento() != null) {
+            dtNascimento.setText(senador.getDataNascimento());
+        }
         TextView naturalidade = (TextView) currentView.findViewById(R.id.textView9);
         if (senador.getNaturalidade() != null) {
             naturalidade.setText(senador.getNaturalidade().toUpperCase(locale));
@@ -105,9 +111,29 @@ public class SenadorFragmentPerfil extends Fragment {
             gabinete.setText(senador.getGabinete().toUpperCase(locale));
         }
         TextView telefones = (TextView) currentView.findViewById(R.id.textView13);
-        telefones.setText(senador.getTelefones());
+        if (senador.getTelefones() != null) {
+            telefones.setText(senador.getTelefones());
+            telefones.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + senador.getTelefones()));
+                    startActivity(intent);
+                }
+            });
+        }
         TextView fax = (TextView) currentView.findViewById(R.id.textView15);
-        fax.setText(senador.getFax());
+        if (senador.getFax() != null) {
+            fax.setText(senador.getFax());
+            fax.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + senador.getFax()));
+                    startActivity(intent);
+                }
+            });
+        }
         TextView email = (TextView) currentView.findViewById(R.id.textView17);
         if (senador.getEmail() != null) {
             email.setText(senador.getEmail().toUpperCase(locale));
@@ -135,7 +161,9 @@ public class SenadorFragmentPerfil extends Fragment {
             });
         }
         TextView end = (TextView) currentView.findViewById(R.id.textView21);
-        end.setText(senador.getEscritorioApoio());
+        if (senador.getEscritorioApoio() != null) {
+            end.setText(senador.getEscritorioApoio().toUpperCase(locale));
+        }
     }
 
     @Override
