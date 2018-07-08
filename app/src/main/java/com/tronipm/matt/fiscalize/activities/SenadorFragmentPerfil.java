@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 import com.tronipm.matt.fiscalize.R;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 import com.tronipm.matt.fiscalize.utils.MLRoundedImageView;
@@ -84,7 +84,7 @@ public class SenadorFragmentPerfil extends Fragment {
     public void populate() {
 
         try {
-            Picasso.get().load(senador.getLinkFoto()).into((MLRoundedImageView) currentView.findViewById(R.id.imageView));
+            Glide.with(getActivity()).load(senador.getLinkFoto()).into((MLRoundedImageView) currentView.findViewById(R.id.imageView));
         } catch (Exception e) {
             e.printStackTrace();
         }

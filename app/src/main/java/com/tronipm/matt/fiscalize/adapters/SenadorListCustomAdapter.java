@@ -73,18 +73,7 @@ public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> {
         holder.view.setBackgroundColor(Color.TRANSPARENT);
 
         if (item.getLinkFoto() != null) {
-//            try {
-//                Bitmap bitmap = Picasso.get().load(dataSet.get(position).getLinkFoto()).get();
-//                if (dataSet.get(position).getLinkFoto().equals(dataSet.get(viewHolder.position).getLinkFoto())) {
-//                    viewHolder.info.setImageBitmap(bitmap);
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
             Glide.with(mContext).load(dataSet.get(position).getLinkFoto()).into(holder.imageView);
-//            new ThumbnailTask(pos, dataSet.get(pos).getLinkFoto(), viewHolder)
-//                    .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
-//            new ThumbnailTask(pos, dataModel.getLinkFoto(), viewHolder).execute();
         }
 
         convertView.setOnClickListener(new View.OnClickListener() {
