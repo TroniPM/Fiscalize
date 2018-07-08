@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.tronipm.matt.fiscalize.R;
 
@@ -24,6 +25,7 @@ import com.tronipm.matt.fiscalize.R;
  */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private long lastPress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,13 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastPress > 3000) {
+                Toast.makeText(getApplicationContext(), getString(R.string.sair), Toast.LENGTH_SHORT).show();
+                lastPress = currentTime;
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 

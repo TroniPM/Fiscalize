@@ -43,9 +43,9 @@ public class SenadorBalanceteActivity extends AppCompatActivity {
     public static final String ARG_PARAM2 = "ano";
     private CrawlerSenador crawler = null;
     private TinyDB db = null;
-    private EntidadeSenador senador = null;
+    private static EntidadeSenador senador = null;
+    private static String ano = null;
     private ProgressDialog dialog = null;
-    private String ano = null;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private SenadorFragmentPerfil fragOne = null;
@@ -109,11 +109,15 @@ public class SenadorBalanceteActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(ARG_PARAM1, senador);
-        outState.putSerializable(ARG_PARAM2, ano);
-        super.onSaveInstanceState(outState);
+    //    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        outState.putSerializable(ARG_PARAM1, senador);
+//        outState.putSerializable(ARG_PARAM2, ano);
+//        super.onSaveInstanceState(outState);
+//    }
+    public static void setDados() {
+        SenadorBalanceteActivity.senador = null;
+        SenadorBalanceteActivity.ano = null;
     }
 
     @Override
@@ -128,10 +132,10 @@ public class SenadorBalanceteActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        if (getIntent().getSerializableExtra(ARG_PARAM1) != null) {
+        if (senador == null && getIntent().getSerializableExtra(ARG_PARAM1) != null) {
             senador = (EntidadeSenador) getIntent().getSerializableExtra(ARG_PARAM1);
             ano = getIntent().getStringExtra(ARG_PARAM2);
-        } else {
+        } else if (senador == null && getIntent().getSerializableExtra(ARG_PARAM1) == null) {
             senador = (EntidadeSenador) getIntent().getExtras().getSerializable(ARG_PARAM1);
             ano = getIntent().getExtras().getString(ARG_PARAM2);
         }
@@ -142,10 +146,7 @@ public class SenadorBalanceteActivity extends AppCompatActivity {
         if (senador != null) {
             if (senador.getConteudoBalancete() == null) {
                 new RetrieveListTask(senador, null).execute();
-            } else {
             }
-
-//            System.out.println(senador);
         } else {
             Toast.makeText(this, "Ocorreu um erro. Resete o banco de dados.", Toast.LENGTH_SHORT).show();
             finish();
