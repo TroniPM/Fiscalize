@@ -1,5 +1,7 @@
 # FISCALIZE App
 [![Build Status](https://travis-ci.org/TroniPM/Fiscalize.svg?branch=master)](https://travis-ci.org/TroniPM/Fiscalize)
+[![GitHub issues](https://img.shields.io/github/issues/Naereen/StrapDown.js.svg)](https://github.com/TroniPM/Fiscalize/issues)
+[![GitHub pull-requests](https://img.shields.io/github/issues-pr/Naereen/StrapDown.js.svg)](https://github.com/TroniPM/Fiscalize/pulls)
 
 Fiscalize é um app para acompanhar gastos do Presidente, Senadores e Deputados Federais. Atualmente está obtendo dados de:
   - Senadores
