@@ -564,6 +564,7 @@ public class CrawlerSenador {
         EntidadeSenadorTabelaResumo tabela = new EntidadeSenadorTabelaResumo();
         try {
             outter.titulo = space(dados.getChildrens().get(0).getHtmlSourceAsText());
+            outter.link = url;
         } catch (Exception e) {
         }
         HTMLObject nPagina = HTMLObject.parse(dados.getHtmlSourceAsHtml());

@@ -137,9 +137,10 @@ public class SenadorFragmentGastos extends Fragment {
                         Toast.makeText(SenadorFragmentGastos.this.getActivity(), "Sem link", Toast.LENGTH_SHORT).show();
                     } else {
 
+                        SenadorResumoActivity.setSenador(senador);
+                        SenadorResumoActivity.setLink(item.link);
+                        SenadorResumoActivity.setTitulo(item.nome);
                         Intent intent = new Intent(getActivity(), SenadorResumoActivity.class);
-                        intent.putExtra(SenadorResumoActivity.ARG_PARAM1, senador);
-                        intent.putExtra(SenadorResumoActivity.ARG_PARAM2, item.link);
                         startActivity(intent);
                         //TODO abrir activity de resumo
                     }
