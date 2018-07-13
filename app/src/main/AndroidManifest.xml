@@ -49,6 +49,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.tronipm.matt.fiscalize.activities.SenadorBalanceteActivity" />
         </activity>
+        <activity
+            android:name=".activities.SenadorDetalheActivity"
+            android:label="@string/title_activity_senador_detalhe"
+            android:parentActivityName=".activities.SenadorResumoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.tronipm.matt.fiscalize.activities.SenadorResumoActivity" />
+        </activity>
     </application>
 
 </manifest>

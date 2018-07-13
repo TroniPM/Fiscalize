@@ -23,14 +23,14 @@ import java.util.ArrayList;
  * For project Fiscalize.
  * Contact: <paulomatew@gmail.com>
  */
-public class SenadorListCustomAdapter extends ArrayAdapter<EntidadeSenador> {
+public class SenadorMainListAdapter extends ArrayAdapter<EntidadeSenador> {
 
     private ArrayList<EntidadeSenador> dataSet;
     private Context mContext;
     private ColorGenerator mColorGenerator = ColorGenerator.MATERIAL;
     private TextDrawable.IBuilder mDrawableBuilder;
 
-    public SenadorListCustomAdapter(TextDrawable.IBuilder mDrawableBuilder, ArrayList<EntidadeSenador> data, Context context) {
+    public SenadorMainListAdapter(TextDrawable.IBuilder mDrawableBuilder, ArrayList<EntidadeSenador> data, Context context) {
         super(context, R.layout.row_senador_listactivity, data);
         this.dataSet = data;
         this.mDrawableBuilder = mDrawableBuilder;

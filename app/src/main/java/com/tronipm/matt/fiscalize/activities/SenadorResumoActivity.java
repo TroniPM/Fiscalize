@@ -1,16 +1,24 @@
 package com.tronipm.matt.fiscalize.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anychart.anychart.AnyChart;
@@ -24,6 +32,7 @@ import com.anychart.anychart.Position;
 import com.anychart.anychart.TooltipPositionMode;
 import com.anychart.anychart.ValueDataEntry;
 import com.tronipm.matt.fiscalize.R;
+import com.tronipm.matt.fiscalize.adapters.SenadorResumoListAdapter;
 import com.tronipm.matt.fiscalize.crawlers.CrawlerSenador;
 import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorResumo;
 import com.tronipm.matt.fiscalize.database.TinyDB;
@@ -41,30 +50,80 @@ public class SenadorResumoActivity extends AppCompatActivity {
     private static String link = null;
     private static String titulo = null;
     private ProgressDialog dialog = null;
+    private ListView listView = null;
+    private TextView textView = null;
+
+
+    public static void setDados() {
+        SenadorResumoActivity.senador = null;
+        SenadorResumoActivity.link = null;
+        SenadorResumoActivity.titulo = null;
+        SenadorResumoActivity.senadorResumo = null;
+    }
+
 
     public static void setSenador(EntidadeSenador senador) {
         SenadorResumoActivity.senador = senador;
-    }
-
-    public static void setSenador() {
-        SenadorResumoActivity.senador = null;
     }
 
     public static void setLink(String link) {
         SenadorResumoActivity.link = link;
     }
 
-    public static void setLink() {
-        SenadorResumoActivity.link = null;
-    }
-
     public static void setTitulo(String titulo) {
         SenadorResumoActivity.titulo = titulo;
     }
 
-    public static void setTitulo() {
-        SenadorResumoActivity.titulo = null;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.senador_menu, menu);
+        return true;
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SenadorDetalheActivity.setDados();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_atualizar) {
+            new RetrieveListTask(senador, link, titulo).execute();
+            return true;
+        } else if (id == R.id.action_infos) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Dados obtidos em:").setMessage(senadorResumo.titulo + "\n" + senadorResumo.date)
+                    .setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            builder.create().show();
+            return true;
+        } else if (id == R.id.action_abrir_web) {
+            if (link != null && !link.isEmpty()) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                startActivity(browserIntent);
+            } else {
+                Toast.makeText(this, "Informação sem link anexado.", Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +145,8 @@ public class SenadorResumoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Resumo");
 
+        listView = (ListView) findViewById(R.id.list);
+        textView = (TextView) findViewById(R.id.textView);
         //APENAS PARA DEBUG
         if (senador != null) {
             boolean flag = true;
@@ -93,6 +154,9 @@ public class SenadorResumoActivity extends AppCompatActivity {
                 if (senador.getConteudoResumo().get(i).link.equals(link)) {
                     senadorResumo = senador.getConteudoResumo().get(i);
                     criarGrafico(senadorResumo);
+
+                    SenadorResumoActivity.this.textView.setText(senadorResumo.titulo);
+                    listView.setAdapter(new SenadorResumoListAdapter(this, senador, senadorResumo.tabela.linhas));
                     flag = false;
                     break;
                 }
@@ -105,6 +169,7 @@ public class SenadorResumoActivity extends AppCompatActivity {
             Toast.makeText(this, "Ocorreu um erro. Resete o banco de dados.", Toast.LENGTH_SHORT).show();
             finish();
         }
+
     }
 
     private void criarGrafico(EntidadeSenadorResumo resumo) {
@@ -128,8 +193,8 @@ public class SenadorResumoActivity extends AppCompatActivity {
         }
 
         CartesianSeriesColumn column = cartesian.column(data);
-        //TODO CORRIGIR DEPOIS a formatação do DECIMAL com.anychart.anychart.Tooltip >> https://docs.anychart.com/Common_Settings/Text_Formatters
-        String formatModel = "R$ {%Value}{groupsSeparator:., decimalsCount:2}";//%.2f
+        //formatação do DECIMAL com.anychart.anychart.Tooltip >> https://docs.anychart.com/Common_Settings/Text_Formatters
+        String formatModel = "R$ {%Value}{groupsSeparator:., decimalsCount:2, decimalPoint:\\\\,}";//%.2f
         column.getTooltip()
                 .setTitleFormat("{%X}")
                 .setPosition(Position.CENTER_BOTTOM)
@@ -177,7 +242,6 @@ public class SenadorResumoActivity extends AppCompatActivity {
         dialog.dismiss();
     }
 
-
     class RetrieveListTask extends AsyncTask<String, Void, EntidadeSenador> {
 
         private EntidadeSenador senador;
@@ -221,6 +285,10 @@ public class SenadorResumoActivity extends AppCompatActivity {
                             break;
                         }
                     }
+
+                    listView.setAdapter(new SenadorResumoListAdapter(SenadorResumoActivity.this, senadorDownloaded, senadorResumo.tabela.linhas));
+
+                    SenadorResumoActivity.this.textView.setText(senadorResumo.titulo);
                     SenadorResumoActivity.this.criarGrafico(resumo);
                     //preencher campos
                     SenadorResumoActivity.this.stopDialog();

@@ -142,7 +142,6 @@ public class SenadorFragmentGastos extends Fragment {
                         SenadorResumoActivity.setTitulo(item.nome);
                         Intent intent = new Intent(getActivity(), SenadorResumoActivity.class);
                         startActivity(intent);
-                        //TODO abrir activity de resumo
                     }
                     return false;
                 }

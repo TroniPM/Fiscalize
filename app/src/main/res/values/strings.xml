@@ -14,4 +14,5 @@
     <string name="informacoes">Informações</string>
     <string name="title_activity_senador_resumo">SenadorResumoActivity</string>
     <string name="sair">Pressione novamente para sair</string>
+    <string name="title_activity_senador_detalhe">SenadorDetalheActivity</string>
 </resources>

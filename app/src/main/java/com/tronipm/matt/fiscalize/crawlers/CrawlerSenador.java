@@ -561,6 +561,7 @@ public class CrawlerSenador {
     private EntidadeSenador getTabelaAno(String url, EntidadeSenador senador, HTMLObject pagina) {
         HTMLObject dados = pagina.getObjectsById("conteudo_transparencia").get(0);//.getChildrens().get(0);
         EntidadeSenadorResumo outter = new EntidadeSenadorResumo();
+        outter.date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
         EntidadeSenadorTabelaResumo tabela = new EntidadeSenadorTabelaResumo();
         try {
             outter.titulo = space(dados.getChildrens().get(0).getHtmlSourceAsText());

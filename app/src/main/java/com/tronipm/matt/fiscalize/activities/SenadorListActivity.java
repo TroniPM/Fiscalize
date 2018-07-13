@@ -1,10 +1,7 @@
 package com.tronipm.matt.fiscalize.activities;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,9 +13,8 @@ import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.tronipm.matt.fiscalize.R;
-import com.tronipm.matt.fiscalize.adapters.SenadorListCustomAdapter;
+import com.tronipm.matt.fiscalize.adapters.SenadorMainListAdapter;
 import com.tronipm.matt.fiscalize.crawlers.CrawlerSenador;
-import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorBalancete;
 import com.tronipm.matt.fiscalize.database.TinyDB;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 import com.tronipm.matt.fiscalize.utils.ComparatorAscSenadores;
@@ -168,7 +164,7 @@ public class SenadorListActivity extends AppCompatActivity {
     private void refresh() {
         if (list != null && !list.isEmpty()) {
             ListView listView = (ListView) findViewById(R.id.list);
-            listView.setAdapter(new SenadorListCustomAdapter(mDrawableBuilder, new TinyDB(this).getListSenador(), this));
+            listView.setAdapter(new SenadorMainListAdapter(mDrawableBuilder, new TinyDB(this).getListSenador(), this));
 
             stopDialog();
         } else {

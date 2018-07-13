@@ -3,9 +3,6 @@ TODO:
 		Informações básicas
 	Fazer tela de RESUMO.
 		Criar adapter para listview em Tela de RESUMO
-		Botão de atualizar conteúdo
-		Botão para abrir na WEB
-		Botão para informar quando informações foram obtidas
 		
 	Fazer tela de DETALHE.
 
