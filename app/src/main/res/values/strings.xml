@@ -17,4 +17,12 @@
     <string name="title_activity_senador_resumo">SenadorResumoActivity</string>
     <string name="sair">Pressione novamente para sair</string>
     <string name="title_activity_senador_detalhe">SenadorDetalheActivity</string>
+    <string name="title_activity_about">AboutActivity</string>
+
+    <string name="version_label">Versão:</string>
+    <string name="created_by">Desenvolvido por:</string>
+    <string name="developerEmail" translatable="false">paulomatew@gmail.com</string>
+    <string name="developerName" translatable="false">Paulo Mateus</string>
+    <string name="sobre">Sobre</string>
+
 </resources>

@@ -116,7 +116,8 @@ public class MainActivity extends AppCompatActivity
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(browserIntent);
         } else if (id == R.id.nav_sobre) {
-
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_doar) {
             String url = "https://pag.ae/bmBctt8";
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
