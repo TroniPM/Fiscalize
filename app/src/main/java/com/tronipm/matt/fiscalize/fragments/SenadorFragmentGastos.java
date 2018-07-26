@@ -1,6 +1,7 @@
 package com.tronipm.matt.fiscalize.fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -115,6 +116,7 @@ public class SenadorFragmentGastos extends Fragment {
                 for (int j = 0; j < balancete.tabela.get(i).linhas.size(); j++) {
                     //Crio a Matéria
                     linhas.add(new ExpandableItem(
+                            balancete.tabela.get(i).titulo,
                             balancete.tabela.get(i).linhas.get(j).label,
                             balancete.tabela.get(i).linhas.get(j).conteudo,
                             balancete.tabela.get(i).linhas.get(j).link));
@@ -136,6 +138,14 @@ public class SenadorFragmentGastos extends Fragment {
                     ExpandableItem item = vinculacao_titulos_linhas.get(key).get(childPosition);
                     if (item.link == null) {
                         Toast.makeText(SenadorFragmentGastos.this.getActivity(), "Sem link", Toast.LENGTH_SHORT).show();
+                    } else if (item.pai != null
+                            && (item.pai.toLowerCase().contains("benefício")
+                            || item.pai.toLowerCase().contains("pessoal")
+                            || item.pai.toLowerCase().contains("subsídios")
+                            || item.pai.toLowerCase().contains("aposentadoria"))) {
+                        //Se não for a respeito de dinheiro, abrir no navegador
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.link));
+                        startActivity(browserIntent);
                     } else {
 
                         SenadorResumoActivity.setSenador(senador);
