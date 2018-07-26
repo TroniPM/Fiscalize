@@ -32,7 +32,7 @@
                 android:value=".activities.MainActivity" />
         </activity>
         <activity
-            android:name=".activities.SenadorBalanceteActivity"
+            android:name=".activities.SenadorActivity"
             android:label="@string/title_activity_senador"
             android:parentActivityName=".activities.SenadorListActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -43,11 +43,11 @@
         <activity
             android:name=".activities.SenadorResumoActivity"
             android:label="@string/title_activity_senador_resumo"
-            android:parentActivityName=".activities.SenadorBalanceteActivity"
+            android:parentActivityName=".activities.SenadorActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.tronipm.matt.fiscalize.activities.SenadorBalanceteActivity" />
+                android:value="com.tronipm.matt.fiscalize.activities.SenadorActivity" />
         </activity>
         <activity
             android:name=".activities.SenadorDetalheActivity"

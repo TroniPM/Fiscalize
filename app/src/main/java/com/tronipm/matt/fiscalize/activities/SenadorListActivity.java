@@ -68,7 +68,7 @@ public class SenadorListActivity extends AppCompatActivity {
         super.onResume();
 
         refresh();
-        SenadorBalanceteActivity.setDados();
+        SenadorActivity.setDados();
     }
 
 

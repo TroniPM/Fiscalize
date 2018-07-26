@@ -1,4 +1,4 @@
-package com.tronipm.matt.fiscalize.activities;
+package com.tronipm.matt.fiscalize.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.tronipm.matt.fiscalize.R;
+import com.tronipm.matt.fiscalize.activities.SenadorResumoActivity;
 import com.tronipm.matt.fiscalize.adapters.ExpandableItem;
 import com.tronipm.matt.fiscalize.adapters.ExpandableListAdapter;
 import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorBalancete;
@@ -82,7 +83,7 @@ public class SenadorFragmentGastos extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        currentView = inflater.inflate(R.layout.fragment_senador_fragment_gastos, container, false);
+        currentView = inflater.inflate(R.layout.fragment_senador_gastos, container, false);
 //        populate();
         return currentView;
     }

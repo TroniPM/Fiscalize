@@ -10,36 +10,25 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.anychart.anychart.AnyChart;
-import com.anychart.anychart.AnyChartView;
-import com.anychart.anychart.Cartesian;
-import com.anychart.anychart.CartesianSeriesColumn;
-import com.anychart.anychart.DataEntry;
-import com.anychart.anychart.EnumsAnchor;
-import com.anychart.anychart.HoverMode;
-import com.anychart.anychart.Position;
-import com.anychart.anychart.TooltipPositionMode;
-import com.anychart.anychart.ValueDataEntry;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.tronipm.matt.fiscalize.R;
-import com.tronipm.matt.fiscalize.adapters.SenadorResumoListAdapter;
+import com.tronipm.matt.fiscalize.adapters.ViewPagerAdapter;
 import com.tronipm.matt.fiscalize.crawlers.CrawlerSenador;
 import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorResumo;
 import com.tronipm.matt.fiscalize.database.TinyDB;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.tronipm.matt.fiscalize.fragments.SenadorFragmentResumoGrafico;
+import com.tronipm.matt.fiscalize.fragments.SenadorFragmentResumoGastos;
 
 public class SenadorResumoActivity extends AppCompatActivity {
     private CrawlerSenador crawlerSenador = null;
@@ -50,9 +39,13 @@ public class SenadorResumoActivity extends AppCompatActivity {
     private static String link = null;
     private static String titulo = null;
     private ProgressDialog dialog = null;
-    private ListView listView = null;
-    private TextView textView = null;
 
+    private ViewPagerAdapter adapter = null;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+
+    private SenadorFragmentResumoGrafico fragOne = null;
+    private SenadorFragmentResumoGastos fragTwo = null;
 
     public static void setDados() {
         SenadorResumoActivity.senador = null;
@@ -60,7 +53,6 @@ public class SenadorResumoActivity extends AppCompatActivity {
         SenadorResumoActivity.titulo = null;
         SenadorResumoActivity.senadorResumo = null;
     }
-
 
     public static void setSenador(EntidadeSenador senador) {
         SenadorResumoActivity.senador = senador;
@@ -80,7 +72,6 @@ public class SenadorResumoActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.senador_menu, menu);
         return true;
     }
-
 
     @Override
     protected void onResume() {
@@ -124,6 +115,22 @@ public class SenadorResumoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void setupViewPager(ViewPager viewPager) {
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        fragOne = SenadorFragmentResumoGrafico.newInstance(senador, senadorResumo);
+        fragTwo = SenadorFragmentResumoGastos.newInstance(senador, senadorResumo);
+
+        adapter.addFragment(fragOne, getResources().getString(R.string.grafico).toUpperCase());
+        adapter.addFragment(fragTwo, getResources().getString(R.string.valores).toUpperCase());
+        viewPager.setAdapter(adapter);
+    }
+
+    private void setupViewPager(TabLayout tabLayout) {
+        tabLayout.getTabAt(0).setIcon(new IconicsDrawable(this).color(Color.WHITE).icon(FontAwesome.Icon.faw_chart_bar));
+        //.color(Color.RED) .sizeDp(24)
+        tabLayout.getTabAt(1).setIcon(new IconicsDrawable(this).color(Color.WHITE).icon(FontAwesome.Icon.faw_dollar_sign));
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,32 +138,33 @@ public class SenadorResumoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_senador_resumo);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         crawlerSenador = new CrawlerSenador();
         db = new TinyDB(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Resumo");
 
-        listView = (ListView) findViewById(R.id.list);
-        textView = (TextView) findViewById(R.id.textView);
+
         //APENAS PARA DEBUG
         if (senador != null) {
             boolean flag = true;
             for (int i = 0; senador.getConteudoResumo() != null && i < senador.getConteudoResumo().size(); i++) {
                 if (senador.getConteudoResumo().get(i).link.equals(link)) {
                     senadorResumo = senador.getConteudoResumo().get(i);
-                    criarGrafico(senadorResumo);
 
-                    SenadorResumoActivity.this.textView.setText(senadorResumo.titulo);
-                    listView.setAdapter(new SenadorResumoListAdapter(this, senador, senadorResumo.tabela.linhas));
+                    startDialog();
+                    init();
+                    stopDialog();
+
                     flag = false;
                     break;
                 }
@@ -172,51 +180,13 @@ public class SenadorResumoActivity extends AppCompatActivity {
 
     }
 
-    private void criarGrafico(EntidadeSenadorResumo resumo) {
-        if (resumo == null) {
-            Toast.makeText(this, "Erro ao consultar informações", Toast.LENGTH_SHORT).show();
-            this.finish();
-            return;
-        }
-        AnyChartView anyChartView = findViewById(R.id.any_chart_view);
-        anyChartView.setProgressBar(findViewById(R.id.progress_bar));
+    private void init() {
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
 
-        Cartesian cartesian = AnyChart.column();
-
-        List<DataEntry> data = new ArrayList<>();
-        for (int i = 0; i < resumo.tabela.linhas.size(); i++) {
-            double vr = Double.parseDouble(resumo.tabela.linhas.get(i).conteudo
-                    .replaceAll("\\.", "")
-                    .replaceAll(",", "."));
-            data.add(new ValueDataEntry(resumo.tabela.linhas.get(i).label,
-                    vr));
-        }
-
-        CartesianSeriesColumn column = cartesian.column(data);
-        //formatação do DECIMAL com.anychart.anychart.Tooltip >> https://docs.anychart.com/Common_Settings/Text_Formatters
-        String formatModel = "R$ {%Value}{groupsSeparator:., decimalsCount:2, decimalPoint:\\\\,}";//%.2f
-        column.getTooltip()
-                .setTitleFormat("{%X}")
-                .setPosition(Position.CENTER_BOTTOM)
-                .setAnchor(EnumsAnchor.CENTER_BOTTOM)
-                .setOffsetX(0d)
-                .setOffsetY(5d)
-                .setFormat(formatModel);
-
-        cartesian.setAnimation(true);
-        cartesian.setTitle(resumo.titulo);
-
-        cartesian.getYScale().setMinimum(0d);
-
-        cartesian.getYAxis().getLabels().setFormat(formatModel);
-
-        cartesian.getTooltip().setPositionMode(TooltipPositionMode.POINT);
-        cartesian.getInteractivity().setHoverMode(HoverMode.BY_X);
-
-        cartesian.getXAxis().setTitle("Mês");
-        cartesian.getYAxis().setTitle("Valor");
-
-        anyChartView.setChart(cartesian);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+        setupViewPager(tabLayout);
     }
 
     private void startDialog() {
@@ -279,17 +249,14 @@ public class SenadorResumoActivity extends AppCompatActivity {
                     SenadorResumoActivity.setSenador(senadorDownloaded);
 
                     EntidadeSenadorResumo resumo = null;
-                    for (int i = 0; i < senador.getConteudoResumo().size(); i++) {
+                    for (int i = 0; i < SenadorResumoActivity.senador.getConteudoResumo().size(); i++) {
                         if (senador.getConteudoResumo().get(i).link.equals(link)) {
                             resumo = senador.getConteudoResumo().get(i);
                             break;
                         }
                     }
-
-                    listView.setAdapter(new SenadorResumoListAdapter(SenadorResumoActivity.this, senadorDownloaded, senadorResumo.tabela.linhas));
-
-                    SenadorResumoActivity.this.textView.setText(senadorResumo.titulo);
-                    SenadorResumoActivity.this.criarGrafico(resumo);
+                    SenadorResumoActivity.senadorResumo = resumo;
+                    init();
                     //preencher campos
                     SenadorResumoActivity.this.stopDialog();
                 }

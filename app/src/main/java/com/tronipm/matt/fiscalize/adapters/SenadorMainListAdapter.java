@@ -13,7 +13,7 @@ import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bumptech.glide.Glide;
 import com.tronipm.matt.fiscalize.R;
-import com.tronipm.matt.fiscalize.activities.SenadorBalanceteActivity;
+import com.tronipm.matt.fiscalize.activities.SenadorActivity;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 
 import java.util.ArrayList;
@@ -79,8 +79,8 @@ public class SenadorMainListAdapter extends ArrayAdapter<EntidadeSenador> {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, SenadorBalanceteActivity.class);
-                intent.putExtra(SenadorBalanceteActivity.ARG_PARAM1, item);
+                Intent intent = new Intent(mContext, SenadorActivity.class);
+                intent.putExtra(SenadorActivity.ARG_PARAM1, item);
                 mContext.startActivity(intent);
             }
         });

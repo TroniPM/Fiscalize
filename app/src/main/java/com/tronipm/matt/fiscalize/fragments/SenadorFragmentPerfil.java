@@ -1,4 +1,4 @@
-package com.tronipm.matt.fiscalize.activities;
+package com.tronipm.matt.fiscalize.fragments;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -14,6 +14,7 @@ import com.tronipm.matt.fiscalize.R;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 import com.tronipm.matt.fiscalize.utils.MLRoundedImageView;
 
+import java.net.URLEncoder;
 import java.util.Locale;
 
 /**
@@ -76,7 +77,7 @@ public class SenadorFragmentPerfil extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        currentView = inflater.inflate(R.layout.fragment_senador_fragment_perfil, container, false);
+        currentView = inflater.inflate(R.layout.fragment_senador_perfil, container, false);
 //        populate();
         return currentView;
     }
@@ -163,6 +164,15 @@ public class SenadorFragmentPerfil extends Fragment {
         TextView end = (TextView) currentView.findViewById(R.id.textView21);
         if (senador.getEscritorioApoio() != null) {
             end.setText(senador.getEscritorioApoio().toUpperCase(locale));
+            end.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent i = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(String.format("geo:0,0?q=%s",
+                                    URLEncoder.encode(senador.getEscritorioApoio()))));
+                    startActivity(i);
+                }
+            });
         }
     }
 
@@ -172,41 +182,4 @@ public class SenadorFragmentPerfil extends Fragment {
 
         this.populate();
     }
-
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
-
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-//    public interface OnFragmentInteractionListener {
-//        void onFragmentInteraction(Uri uri);
-//    }
 }

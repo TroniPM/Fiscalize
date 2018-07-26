@@ -25,10 +25,13 @@ import android.widget.Toast;
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.tronipm.matt.fiscalize.R;
+import com.tronipm.matt.fiscalize.adapters.ViewPagerAdapter;
 import com.tronipm.matt.fiscalize.crawlers.CrawlerSenador;
 import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorBalancete;
 import com.tronipm.matt.fiscalize.database.TinyDB;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
+import com.tronipm.matt.fiscalize.fragments.SenadorFragmentGastos;
+import com.tronipm.matt.fiscalize.fragments.SenadorFragmentPerfil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +41,7 @@ import java.util.List;
  * For project Fiscalize.
  * Contact: <paulomatew@gmail.com>
  */
-public class SenadorBalanceteActivity extends AppCompatActivity {
+public class SenadorActivity extends AppCompatActivity {
     public static final String ARG_PARAM1 = "senador";
     public static final String ARG_PARAM2 = "ano";
     private CrawlerSenador crawler = null;
@@ -116,8 +119,8 @@ public class SenadorBalanceteActivity extends AppCompatActivity {
 //        super.onSaveInstanceState(outState);
 //    }
     public static void setDados() {
-        SenadorBalanceteActivity.senador = null;
-        SenadorBalanceteActivity.ano = null;
+        SenadorActivity.senador = null;
+        SenadorActivity.ano = null;
     }
 
     @Override
@@ -170,7 +173,7 @@ public class SenadorBalanceteActivity extends AppCompatActivity {
                     items[i] = senador.getAnosDisponiveis().get(i);
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(SenadorBalanceteActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(SenadorActivity.this);
                 builder.setTitle("Anos Disponíveis");
                 builder.setItems(items, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
@@ -186,7 +189,7 @@ public class SenadorBalanceteActivity extends AppCompatActivity {
                         if (flag) {
                             new RetrieveListTask(senador, ano).execute();
                         } else {
-                            SenadorBalanceteActivity.this.update(senador, ano);
+                            SenadorActivity.this.update(senador, ano);
                         }
                         dialog.dismiss();
                     }
@@ -228,7 +231,7 @@ public class SenadorBalanceteActivity extends AppCompatActivity {
 
     private void startDialog() {
         if (dialog == null) {
-            dialog = new ProgressDialog(SenadorBalanceteActivity.this);
+            dialog = new ProgressDialog(SenadorActivity.this);
             dialog.setMessage("Carregando...");
             dialog.setIndeterminate(true);
             dialog.setCanceledOnTouchOutside(false);
@@ -237,8 +240,8 @@ public class SenadorBalanceteActivity extends AppCompatActivity {
             dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialogInterface) {
-                    Toast.makeText(SenadorBalanceteActivity.this, "Cancelado", Toast.LENGTH_SHORT).show();
-                    SenadorBalanceteActivity.this.finish();
+                    Toast.makeText(SenadorActivity.this, "Cancelado", Toast.LENGTH_SHORT).show();
+                    SenadorActivity.this.finish();
                 }
             });
         }
@@ -255,58 +258,19 @@ public class SenadorBalanceteActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         setupViewPager(tabLayout);
 
-        SenadorBalanceteActivity.this.senador = entd;
-        SenadorBalanceteActivity.this.fragOne.setSenador(entd);
-        SenadorBalanceteActivity.this.fragTwo.setSenador(entd);
-        SenadorBalanceteActivity.this.ano = ano;
-        SenadorBalanceteActivity.this.fragOne.setAno(ano);
-        SenadorBalanceteActivity.this.fragTwo.setAno(ano);
+        SenadorActivity.this.senador = entd;
+        SenadorActivity.this.fragOne.setSenador(entd);
+        SenadorActivity.this.fragTwo.setSenador(entd);
+        SenadorActivity.this.ano = ano;
+        SenadorActivity.this.fragOne.setAno(ano);
+        SenadorActivity.this.fragTwo.setAno(ano);
 
-        SenadorBalanceteActivity.this.fragOne.populate();
-        SenadorBalanceteActivity.this.fragTwo.populate();
+        SenadorActivity.this.fragOne.populate();
+        SenadorActivity.this.fragTwo.populate();
 
-        SenadorBalanceteActivity.this.tabLayout.invalidate();
-        SenadorBalanceteActivity.this.viewPager.invalidate();
+        SenadorActivity.this.tabLayout.invalidate();
+        SenadorActivity.this.viewPager.invalidate();
 
-    }
-
-    class ViewPagerAdapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragmentList = new ArrayList<>();
-        private final List<String> mFragmentTitleList = new ArrayList<>();
-
-        public ViewPagerAdapter(FragmentManager manager) {
-            super(manager);
-        }
-
-        public List<String> getFragmentTitleList() {
-            return this.mFragmentTitleList;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragmentList.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragmentList.size();
-        }
-
-        public void addFragment(Fragment fragment, String title) {
-            mFragmentList.add(fragment);
-            mFragmentTitleList.add(title);
-        }
-
-        @Override
-        public int getItemPosition(@NonNull Object item) {
-            return POSITION_NONE;
-//          return super.getItemPosition(item);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitleList.get(position);
-        }
     }
 
     class RetrieveListTask extends AsyncTask<String, Void, EntidadeSenador> {
@@ -318,10 +282,10 @@ public class SenadorBalanceteActivity extends AppCompatActivity {
             this.senador = senador;
             this.ano = ano;
 
-            SenadorBalanceteActivity.this.runOnUiThread(new Runnable() {
+            SenadorActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    SenadorBalanceteActivity.this.startDialog();
+                    SenadorActivity.this.startDialog();
                 }
             });
         }
@@ -337,15 +301,15 @@ public class SenadorBalanceteActivity extends AppCompatActivity {
 
         protected void onPostExecute(final EntidadeSenador senadorDownloaded) {
             //https://stackoverflow.com/questions/2250770/how-to-refresh-android-listview
-            SenadorBalanceteActivity.this.runOnUiThread(new Runnable() {
+            SenadorActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-//                    SenadorBalanceteActivity.this.get();
+//                    SenadorActivity.this.get();
                     db.putSenador(senadorDownloaded);
                     String anoAux = senadorDownloaded.getAnosDisponiveis().get(senadorDownloaded.getAnosDisponiveis().size() - 1);
-                    SenadorBalanceteActivity.this.update(senadorDownloaded,
+                    SenadorActivity.this.update(senadorDownloaded,
                             ano == null ? anoAux : ano);
-                    SenadorBalanceteActivity.this.stopDialog();
+                    SenadorActivity.this.stopDialog();
 //                    System.out.println(senadorDownloaded);
                 }
             });

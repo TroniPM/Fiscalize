@@ -12,6 +12,8 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="informacoes">Informações</string>
+    <string name="valores">Valores</string>
+    <string name="grafico">Gráfico</string>
     <string name="title_activity_senador_resumo">SenadorResumoActivity</string>
     <string name="sair">Pressione novamente para sair</string>
     <string name="title_activity_senador_detalhe">SenadorDetalheActivity</string>
