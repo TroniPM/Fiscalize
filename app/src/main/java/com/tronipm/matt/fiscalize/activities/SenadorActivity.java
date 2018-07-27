@@ -83,7 +83,8 @@ public class SenadorActivity extends AppCompatActivity {
             }
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Dados (" + ano + ") obtidos em:").setMessage(date)
+            builder.setTitle("Informações")
+                    .setMessage("Dados sobre Senador (" + ano + ") atualizado em:\r\n" + date + ".")
                     .setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.dismiss();

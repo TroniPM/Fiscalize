@@ -93,7 +93,9 @@ public class SenadorResumoActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_infos) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Dados obtidos em:").setMessage(senadorResumo.titulo + "\n" + senadorResumo.date)
+            builder
+                    .setTitle("Informações")
+                    .setMessage("Dados sobre \"" + senadorResumo.titulo + "\" atualizado em:\r\n" + senadorResumo.date + ".")
                     .setPositiveButton("Cancelar", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.dismiss();

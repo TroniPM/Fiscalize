@@ -614,6 +614,8 @@ public class CrawlerSenador {
         EntidadeSenadorTabelaDetalhe tabela = new EntidadeSenadorTabelaDetalhe();
         try {
             inner.titulo = space(dados.getChildrens().get(0).getHtmlSourceAsText());
+            inner.link = url;
+            inner.date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
         } catch (Exception e) {
         }
         HTMLObject nPagina = HTMLObject.parse(dados.getHtmlSourceAsHtml());
