@@ -60,7 +60,7 @@ public class CrawlerSenador {
 //        System.out.println(senador);
 //    }
 
-    public EntidadeSenador conn_getSenadorAno(EntidadeSenador senador, String url) {
+    public EntidadeSenador conn_getSenadorAno(EntidadeSenador senador, String url, String tituloBalancete) {
         if (url == null || url.trim().isEmpty()) {
             return senador;
         }
@@ -75,7 +75,7 @@ public class CrawlerSenador {
         }
 
         try {
-            senador = getTabelaAno(url, senador, pagina);
+            senador = getTabelaAno(url, senador, pagina, tituloBalancete);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -558,7 +558,7 @@ public class CrawlerSenador {
     public CrawlerSenador() {
     }
 
-    private EntidadeSenador getTabelaAno(String url, EntidadeSenador senador, HTMLObject pagina) {
+    private EntidadeSenador getTabelaAno(String url, EntidadeSenador senador, HTMLObject pagina, String tituloBalancete) {
         HTMLObject dados = pagina.getObjectsById("conteudo_transparencia").get(0);//.getChildrens().get(0);
         EntidadeSenadorResumo outter = new EntidadeSenadorResumo();
         outter.date = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date());
@@ -567,6 +567,12 @@ public class CrawlerSenador {
             outter.titulo = space(dados.getChildrens().get(0).getHtmlSourceAsText());
             outter.link = url;
         } catch (Exception e) {
+        }
+
+        //TODO remover isso para versão final
+        boolean openWeb = false;
+        if (tituloBalancete.toLowerCase().contains("não incluso")) {
+            openWeb = true;
         }
         HTMLObject nPagina = HTMLObject.parse(dados.getHtmlSourceAsHtml());
         HTMLObject tabelaHTML = nPagina.getObjectsByTag("table").get(0).getChildrens().get(2);
@@ -580,6 +586,7 @@ public class CrawlerSenador {
                 EntidadeSenadorTabelaResumoLinha linha = new EntidadeSenadorTabelaResumoLinha();
                 linha.label = space(in.getChildrens().get(0).getHtmlSourceAsText());
                 linha.conteudo = space(in.getChildrens().get(1).getHtmlSourceAsText());
+                linha.openWeb = openWeb;
                 try {
                     String link = space(in.getChildrens().get(1).getChildrens().get(0).getAttribute("href"));
                     if (link != null) {

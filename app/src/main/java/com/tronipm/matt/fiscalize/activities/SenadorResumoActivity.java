@@ -38,6 +38,7 @@ public class SenadorResumoActivity extends AppCompatActivity {
     private static EntidadeSenadorResumo senadorResumo = null;
     private static String link = null;
     private static String titulo = null;
+    private static String tituloBalancete = null;
     private ProgressDialog dialog = null;
 
     private ViewPagerAdapter adapter = null;
@@ -66,6 +67,10 @@ public class SenadorResumoActivity extends AppCompatActivity {
         SenadorResumoActivity.titulo = titulo;
     }
 
+    public static void setTituloBalancete(String tituloBalancete) {
+        SenadorResumoActivity.tituloBalancete = tituloBalancete;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -89,7 +94,7 @@ public class SenadorResumoActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_atualizar) {
-            new RetrieveListTask(senador, link, titulo).execute();
+            new RetrieveListTask(senador, link, titulo, tituloBalancete).execute();
             return true;
         } else if (id == R.id.action_infos) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -173,7 +178,7 @@ public class SenadorResumoActivity extends AppCompatActivity {
             }
 
             if (flag) {
-                new RetrieveListTask(senador, link, titulo).execute();
+                new RetrieveListTask(senador, link, titulo, tituloBalancete).execute();
             }
         } else {
             Toast.makeText(this, "Ocorreu um erro. Resete o banco de dados.", Toast.LENGTH_SHORT).show();
@@ -219,11 +224,13 @@ public class SenadorResumoActivity extends AppCompatActivity {
         private EntidadeSenador senador;
         private String link;
         private String titulo;
+        private String tituloBalancete;
 
-        protected RetrieveListTask(EntidadeSenador senador, String link, String titulo) {
+        protected RetrieveListTask(EntidadeSenador senador, String link, String titulo, String tituloBalancete) {
             this.senador = senador;
             this.link = link;
             this.titulo = titulo;
+            this.tituloBalancete = tituloBalancete;
 
             SenadorResumoActivity.this.runOnUiThread(new Runnable() {
                 @Override
@@ -235,7 +242,7 @@ public class SenadorResumoActivity extends AppCompatActivity {
 
         protected EntidadeSenador doInBackground(String... url) {
             try {
-                return crawlerSenador.conn_getSenadorAno(senador, link);
+                return crawlerSenador.conn_getSenadorAno(senador, link, tituloBalancete);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
-    android:background="@drawable/side_nav_bar"
+    android:background="@drawable/bandeira"
     android:gravity="bottom"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -11,6 +11,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    <!--Peguei a imagem da bandeira aqui: https://www.blogdumoderateur.com/fond-ecran-coupe-du-monde-2014-bresil/-->
+    <!--http://www.acif.org.br/acif/nota_sobre_manifestacoes/attachment/bandeira-do-brasil-estilizada-90x60-d_nq_np_407701-mlb20389727016_082015-f/-->
 
     <ImageView
         android:id="@+id/imageView"

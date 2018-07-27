@@ -151,6 +151,7 @@ public class SenadorFragmentGastos extends Fragment {
                         SenadorResumoActivity.setSenador(senador);
                         SenadorResumoActivity.setLink(item.link);
                         SenadorResumoActivity.setTitulo(item.nome);
+                        SenadorResumoActivity.setTituloBalancete(item.pai);
                         Intent intent = new Intent(getActivity(), SenadorResumoActivity.class);
                         startActivity(intent);
                     }

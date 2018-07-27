@@ -49,10 +49,32 @@ public class TinyDB {
     private String lastImagePath = "";
 
     public static final String KEY_SENADOR_LIST = "senadorList";
+    public static final String KEY_VERSAO_DB = "versao";
+
+    private static final int versaoAtual = 1;
 
     public TinyDB(Context appContext) {
         preferences = PreferenceManager.getDefaultSharedPreferences(appContext);
+
+        //Atualizando versão do banco (esvaziando),  caso necessário
+        if (getVersao() == 0 /*|| getVersao() < versaoAtual*/) {
+            updateVersao();
+            atualizarVersao();
+        }
     }
+
+    private void atualizarVersao() {
+        clearListSenador();
+    }
+
+    private int getVersao() {
+        return getInt(KEY_VERSAO_DB);
+    }
+
+    private void updateVersao() {
+        putInt(KEY_VERSAO_DB, versaoAtual);
+    }
+
 
     /**
      * Decodes the Bitmap from 'path' and returns it
@@ -561,6 +583,11 @@ public class TinyDB {
             objStrings.add(gson.toJson(obj));
         }
         putListString(KEY_SENADOR_LIST, objStrings);
+    }
+
+    public void clearListSenador() {
+        checkForNullKey(KEY_SENADOR_LIST);
+        preferences.edit().putString(KEY_SENADOR_LIST, null).apply();
     }
 
     public void putSenador(EntidadeSenador sen) {

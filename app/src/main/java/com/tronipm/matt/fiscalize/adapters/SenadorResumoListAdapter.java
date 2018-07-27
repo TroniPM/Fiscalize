@@ -2,6 +2,7 @@ package com.tronipm.matt.fiscalize.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,12 +82,23 @@ public class SenadorResumoListAdapter extends ArrayAdapter<EntidadeSenadorTabela
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    SenadorDetalheActivity.setSenador(senador);
-                    SenadorDetalheActivity.setLink(item.link);
-                    SenadorDetalheActivity.setTitulo(item.label);
+                    if (item.openWeb) {
+                        //TODO tirar isso e colocar no crawler/tela de detalhe
+                        /**
+                         * Gastos não inclusos nas Cotas para Exercício da Atividade Parlamentar
+                         * serão abertos diretamente no navegador, mas é necessário consertar
+                         * isso e colcoar pra abrir na tela de detalhe.
+                         */
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.link));
+                        mContext.startActivity(browserIntent);
+                    } else {
+                        SenadorDetalheActivity.setSenador(senador);
+                        SenadorDetalheActivity.setLink(item.link);
+                        SenadorDetalheActivity.setTitulo(item.label);
 
-                    Intent intent = new Intent(mContext, SenadorDetalheActivity.class);
-                    mContext.startActivity(intent);
+                        Intent intent = new Intent(mContext, SenadorDetalheActivity.class);
+                        mContext.startActivity(intent);
+                    }
                 }
             });
 
@@ -96,7 +108,7 @@ public class SenadorResumoListAdapter extends ArrayAdapter<EntidadeSenadorTabela
     }
 
     private class ViewHolder {
-//        private View view;
+        //        private View view;
         private TextView textView;
         private TextView textView2;
         private ImageView imageView;
