@@ -2,9 +2,12 @@ package com.tronipm.matt.fiscalize.activities;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +36,7 @@ import com.tronipm.matt.fiscalize.database.TinyDB;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 import com.tronipm.matt.fiscalize.fragments.SenadorFragmentGastos;
 import com.tronipm.matt.fiscalize.fragments.SenadorFragmentPerfil;
+import com.tronipm.matt.fiscalize.utils.AnalyticsApplication;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +59,7 @@ public class SenadorActivity extends AppCompatActivity {
     private SenadorFragmentPerfil fragOne = null;
     private SenadorFragmentGastos fragTwo = null;
     private ViewPagerAdapter adapter = null;
+    private AnalyticsApplication app = null;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -71,9 +77,15 @@ public class SenadorActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_atualizar) {
-            new RetrieveListTask(senador, ano).execute();
+            app.action("atualizar");
+            if (isNetworkAvailable()) {
+                new RetrieveListTask(senador, ano).execute();
+            } else {
+                Toast.makeText(SenadorActivity.this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+            }
             return true;
         } else if (id == R.id.action_infos) {
+            app.action("informacoes");
             String date = null;
             for (EntidadeSenadorBalancete in : senador.getConteudoBalancete()) {
                 if (in.ano.equals(ano)) {
@@ -94,6 +106,7 @@ public class SenadorActivity extends AppCompatActivity {
             builder.create().show();
             return true;
         } else if (id == R.id.action_abrir_web) {
+            app.action("abrir_web");
             String link = null;
             for (EntidadeSenadorBalancete in : senador.getConteudoBalancete()) {
                 if (in.ano.equals(ano)) {
@@ -127,6 +140,7 @@ public class SenadorActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        app.screen(SenadorActivity.class.getSimpleName() + "_" + SenadorFragmentPerfil.class.getSimpleName());
 
         SenadorResumoActivity.setDados();
     }
@@ -140,6 +154,7 @@ public class SenadorActivity extends AppCompatActivity {
 
         db = new TinyDB(this);
         crawler = new CrawlerSenador();
+        app = (AnalyticsApplication) getApplication();
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -156,7 +171,11 @@ public class SenadorActivity extends AppCompatActivity {
         //APENAS PARA DEBUG
         if (senador != null) {
             if (senador.getConteudoBalancete() == null) {
-                new RetrieveListTask(senador, null).execute();
+                if (isNetworkAvailable()) {
+                    new RetrieveListTask(senador, null).execute();
+                } else {
+                    Toast.makeText(this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+                }
             }
         } else {
             Toast.makeText(this, "Ocorreu um erro. Resete o banco de dados.", Toast.LENGTH_SHORT).show();
@@ -188,7 +207,11 @@ public class SenadorActivity extends AppCompatActivity {
                             }
                         }
                         if (flag) {
-                            new RetrieveListTask(senador, ano).execute();
+                            if (isNetworkAvailable()) {
+                                new RetrieveListTask(senador, ano).execute();
+                            } else {
+                                Toast.makeText(SenadorActivity.this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             SenadorActivity.this.update(senador, ano);
                         }
@@ -199,6 +222,13 @@ public class SenadorActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
     private void get() {
@@ -215,6 +245,20 @@ public class SenadorActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                app.screen(SenadorActivity.class.getSimpleName() + "_" + adapter.getItem(i).getClass().getSimpleName());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
+        });
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         fragOne = SenadorFragmentPerfil.newInstance(senador, ano);
         fragTwo = SenadorFragmentGastos.newInstance(senador, ano);

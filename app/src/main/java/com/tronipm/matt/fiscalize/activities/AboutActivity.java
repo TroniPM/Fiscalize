@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.tronipm.matt.fiscalize.R;
+import com.tronipm.matt.fiscalize.utils.AnalyticsApplication;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -36,5 +37,13 @@ public class AboutActivity extends AppCompatActivity {
         label.setText(version);
 
         setTitle(getString(R.string.sobre));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AnalyticsApplication app = (AnalyticsApplication) getApplication();
+        app.screen(AboutActivity.class.getSimpleName());
     }
 }

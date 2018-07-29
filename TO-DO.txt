@@ -1,10 +1,5 @@
 TODO: 
-	Fazer tela de SOBRE.
-		Informações básicas
-	Fazer tela de RESUMO.
-		Criar adapter para listview em Tela de RESUMO
-		
-	Fazer tela de DETALHE.
+	Fazer com que crawler pegue as informações da segunda tabela.
 
 	Adicionar na barra de senadores list activity recurso na actionbar para buscar pelo nome:
 		https://www.journaldev.com/14073/android-multi-search-filter-contacts

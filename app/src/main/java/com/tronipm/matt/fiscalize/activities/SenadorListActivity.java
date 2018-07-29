@@ -1,7 +1,10 @@
 package com.tronipm.matt.fiscalize.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +20,7 @@ import com.tronipm.matt.fiscalize.adapters.SenadorMainListAdapter;
 import com.tronipm.matt.fiscalize.crawlers.CrawlerSenador;
 import com.tronipm.matt.fiscalize.database.TinyDB;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
+import com.tronipm.matt.fiscalize.utils.AnalyticsApplication;
 import com.tronipm.matt.fiscalize.utils.ComparatorAscSenadores;
 
 import java.util.ArrayList;
@@ -37,6 +41,7 @@ public class SenadorListActivity extends AppCompatActivity {
     private static final int limit = 3;
 
     private TextDrawable.IBuilder mDrawableBuilder = null;
+    private AnalyticsApplication app = null;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,8 +59,14 @@ public class SenadorListActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_atualizar) {
+            app.action("atualizar");
             startDialog();
-            new RetrieveListTask().execute();
+
+            if (isNetworkAvailable()) {
+                new RetrieveListTask().execute();
+            } else {
+                Toast.makeText(SenadorListActivity.this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
 
@@ -66,11 +77,12 @@ public class SenadorListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        app = (AnalyticsApplication) getApplication();
+        app.screen(SenadorListActivity.class.getSimpleName());
 
         refresh();
         SenadorActivity.setDados();
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,11 +181,22 @@ public class SenadorListActivity extends AppCompatActivity {
             stopDialog();
         } else {
             if ((tries++) <= limit) {
-                new RetrieveListTask().execute();
+                if(isNetworkAvailable()) {
+                    new RetrieveListTask().execute();
+                } else {
+                    Toast.makeText(this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(this, "Não foi possível obter a lista de senadores. Ative sua conexão com a internet.", Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
     //https://stackoverflow.com/questions/6343166/how-do-i-fix-android-os-networkonmainthreadexception

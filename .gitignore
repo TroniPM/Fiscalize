@@ -1,3 +1,6 @@
+#Google analytics KEY
+global_tracker.xml
+
 # Built application files
 *.apk
 *.ap_
@@ -51,6 +54,9 @@ captures/
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
+
+# Json output
+output.json
 
 # Freeline
 freeline.py

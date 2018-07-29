@@ -2,8 +2,11 @@ package com.tronipm.matt.fiscalize.activities;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import com.tronipm.matt.fiscalize.crawlers.CrawlerSenador;
 import com.tronipm.matt.fiscalize.crawlers.entities.EntidadeSenadorDetalhe;
 import com.tronipm.matt.fiscalize.database.TinyDB;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
+import com.tronipm.matt.fiscalize.utils.AnalyticsApplication;
 
 public class SenadorDetalheActivity extends AppCompatActivity {
     private CrawlerSenador crawlerSenador = null;
@@ -32,6 +36,8 @@ public class SenadorDetalheActivity extends AppCompatActivity {
     private static String link = null;
     private static String titulo = null;
     private ProgressDialog dialog = null;
+
+    private AnalyticsApplication app = null;
 
     public static void setDados() {
         senador = null;
@@ -62,8 +68,14 @@ public class SenadorDetalheActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        app.screen(SenadorDetalheActivity.class.getSimpleName());
+    }
 
-        SenadorDetalheActivity.setDados();
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
     @Override
@@ -75,9 +87,15 @@ public class SenadorDetalheActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_atualizar) {
-            new RetrieveListTask(senador, link, titulo).execute();
+            app.action("atualizar");
+            if (isNetworkAvailable()) {
+                new RetrieveListTask(senador, link, titulo).execute();
+            } else {
+                Toast.makeText(SenadorDetalheActivity.this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+            }
             return true;
         } else if (id == R.id.action_infos) {
+            app.action("informacoes");
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             String t = senadorDetalhe.titulo == null ? titulo : senadorDetalhe.titulo;
             String d = senadorDetalhe.date == null ? "NULL" : senadorDetalhe.date;
@@ -93,6 +111,7 @@ public class SenadorDetalheActivity extends AppCompatActivity {
             builder.create().show();
             return true;
         } else if (id == R.id.action_abrir_web) {
+            app.action("abrir_web");
             if (senadorDetalhe.link != null && !senadorDetalhe.link.isEmpty()) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(senadorDetalhe.link));
                 startActivity(browserIntent);
@@ -114,6 +133,7 @@ public class SenadorDetalheActivity extends AppCompatActivity {
 
         crawlerSenador = new CrawlerSenador();
         db = new TinyDB(this);
+        app = (AnalyticsApplication) getApplication();
 
 //        TextView tv = (TextView) findViewById(R.id.textView);
 //        tv.setText(titulo);
@@ -135,7 +155,11 @@ public class SenadorDetalheActivity extends AppCompatActivity {
             }
 
             if (flag) {
-                new RetrieveListTask(senador, link, titulo).execute();
+                if (isNetworkAvailable()) {
+                    new RetrieveListTask(senador, link, titulo).execute();
+                } else {
+                    Toast.makeText(SenadorDetalheActivity.this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+                }
             }
         } else {
             Toast.makeText(this, "Ocorreu um erro. Resete o banco de dados.", Toast.LENGTH_SHORT).show();

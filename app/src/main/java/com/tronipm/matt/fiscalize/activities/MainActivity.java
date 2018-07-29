@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.tronipm.matt.fiscalize.R;
+import com.tronipm.matt.fiscalize.utils.AnalyticsApplication;
 
 /**
  * Created by PMateus on 07/07/2018.
@@ -26,6 +27,14 @@ import com.tronipm.matt.fiscalize.R;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private long lastPress;
+    private AnalyticsApplication app = null;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        app = (AnalyticsApplication) getApplication();
+        app.screen(MainActivity.class.getSimpleName());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +114,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_presidente) {
 
         } else if (id == R.id.nav_compartilhar) {
+            app.button("compartilhar_app");
             String link = "https://play.google.com/store/apps/details?id=com.tronipm.matt.fiscalize";
             String shareBody = "Olha esse app que legal! Dá pra ver os gastos de Senadores em tempo real. \r\n" + link;
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -112,6 +122,7 @@ public class MainActivity extends AppCompatActivity
             sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
             startActivity(Intent.createChooser(sharingIntent, "compartilhar"));
         } else if (id == R.id.nav_opensource) {
+            app.button("link_github");
             String url = "https://github.com/TroniPM/Fiscalize";
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(browserIntent);
@@ -119,6 +130,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_doar) {
+            app.button("link_doar");
             String url = "https://pag.ae/bmBctt8";
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             startActivity(browserIntent);

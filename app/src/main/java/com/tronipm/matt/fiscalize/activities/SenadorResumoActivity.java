@@ -2,9 +2,12 @@ package com.tronipm.matt.fiscalize.activities;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,6 +32,7 @@ import com.tronipm.matt.fiscalize.database.TinyDB;
 import com.tronipm.matt.fiscalize.entities.EntidadeSenador;
 import com.tronipm.matt.fiscalize.fragments.SenadorFragmentResumoGrafico;
 import com.tronipm.matt.fiscalize.fragments.SenadorFragmentResumoGastos;
+import com.tronipm.matt.fiscalize.utils.AnalyticsApplication;
 
 public class SenadorResumoActivity extends AppCompatActivity {
     private CrawlerSenador crawlerSenador = null;
@@ -47,6 +51,7 @@ public class SenadorResumoActivity extends AppCompatActivity {
 
     private SenadorFragmentResumoGrafico fragOne = null;
     private SenadorFragmentResumoGastos fragTwo = null;
+    private AnalyticsApplication app = null;
 
     public static void setDados() {
         SenadorResumoActivity.senador = null;
@@ -81,7 +86,7 @@ public class SenadorResumoActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
+        app.screen(SenadorActivity.class.getSimpleName() + "_" + SenadorFragmentResumoGrafico.class.getSimpleName());
         SenadorDetalheActivity.setDados();
     }
 
@@ -94,9 +99,15 @@ public class SenadorResumoActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_atualizar) {
-            new RetrieveListTask(senador, link, titulo, tituloBalancete).execute();
+            app.action("atualizar");
+            if (isNetworkAvailable()) {
+                new RetrieveListTask(senador, link, titulo, tituloBalancete).execute();
+            } else {
+                Toast.makeText(SenadorResumoActivity.this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+            }
             return true;
         } else if (id == R.id.action_infos) {
+            app.action("informacoes");
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder
                     .setTitle("Informações")
@@ -110,6 +121,7 @@ public class SenadorResumoActivity extends AppCompatActivity {
             builder.create().show();
             return true;
         } else if (id == R.id.action_abrir_web) {
+            app.action("abrir_web");
             if (link != null && !link.isEmpty()) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
                 startActivity(browserIntent);
@@ -123,6 +135,20 @@ public class SenadorResumoActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int i, float v, int i1) {
+            }
+
+            @Override
+            public void onPageSelected(int i) {
+                app.screen(SenadorResumoActivity.class.getSimpleName() + "_" + adapter.getItem(i).getClass().getSimpleName());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int i) {
+            }
+        });
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         fragOne = SenadorFragmentResumoGrafico.newInstance(senador, senadorResumo);
         fragTwo = SenadorFragmentResumoGastos.newInstance(senador, senadorResumo);
@@ -148,15 +174,8 @@ public class SenadorResumoActivity extends AppCompatActivity {
 
         crawlerSenador = new CrawlerSenador();
         db = new TinyDB(this);
+        app = (AnalyticsApplication) getApplication();
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Resumo");
 
@@ -178,13 +197,25 @@ public class SenadorResumoActivity extends AppCompatActivity {
             }
 
             if (flag) {
-                new RetrieveListTask(senador, link, titulo, tituloBalancete).execute();
+                if (isNetworkAvailable()) {
+                    new RetrieveListTask(senador, link, titulo, tituloBalancete).execute();
+                } else {
+                    Toast.makeText(SenadorResumoActivity.this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+                }
             }
         } else {
             Toast.makeText(this, "Ocorreu um erro. Resete o banco de dados.", Toast.LENGTH_SHORT).show();
             finish();
         }
 
+    }
+
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
     }
 
     private void init() {
