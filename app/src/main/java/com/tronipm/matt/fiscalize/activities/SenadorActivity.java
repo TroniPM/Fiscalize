@@ -82,6 +82,7 @@ public class SenadorActivity extends AppCompatActivity {
                 new RetrieveListTask(senador, ano).execute();
             } else {
                 Toast.makeText(SenadorActivity.this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+                SenadorActivity.this.finish();
             }
             return true;
         } else if (id == R.id.action_infos) {
@@ -175,6 +176,7 @@ public class SenadorActivity extends AppCompatActivity {
                     new RetrieveListTask(senador, null).execute();
                 } else {
                     Toast.makeText(this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+                    SenadorActivity.this.finish();
                 }
             }
         } else {
@@ -211,6 +213,7 @@ public class SenadorActivity extends AppCompatActivity {
                                 new RetrieveListTask(senador, ano).execute();
                             } else {
                                 Toast.makeText(SenadorActivity.this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+                                SenadorActivity.this.finish();
                             }
                         } else {
                             SenadorActivity.this.update(senador, ano);

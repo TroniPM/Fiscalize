@@ -104,6 +104,7 @@ public class SenadorResumoActivity extends AppCompatActivity {
                 new RetrieveListTask(senador, link, titulo, tituloBalancete).execute();
             } else {
                 Toast.makeText(SenadorResumoActivity.this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+                SenadorResumoActivity.this.finish();
             }
             return true;
         } else if (id == R.id.action_infos) {
@@ -201,6 +202,7 @@ public class SenadorResumoActivity extends AppCompatActivity {
                     new RetrieveListTask(senador, link, titulo, tituloBalancete).execute();
                 } else {
                     Toast.makeText(SenadorResumoActivity.this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+                    SenadorResumoActivity.this.finish();
                 }
             }
         } else {

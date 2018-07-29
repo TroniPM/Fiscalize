@@ -66,6 +66,7 @@ public class SenadorListActivity extends AppCompatActivity {
                 new RetrieveListTask().execute();
             } else {
                 Toast.makeText(SenadorListActivity.this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+                SenadorListActivity.this.finish();
             }
             return true;
         }
@@ -185,6 +186,7 @@ public class SenadorListActivity extends AppCompatActivity {
                     new RetrieveListTask().execute();
                 } else {
                     Toast.makeText(this, "Internet indisponível", Toast.LENGTH_SHORT).show();
+                    SenadorListActivity.this.finish();
                 }
             } else {
                 Toast.makeText(this, "Não foi possível obter a lista de senadores. Ative sua conexão com a internet.", Toast.LENGTH_LONG).show();
