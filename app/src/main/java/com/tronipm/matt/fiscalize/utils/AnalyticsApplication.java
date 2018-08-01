@@ -40,7 +40,8 @@ public class AnalyticsApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        sAnalytics = GoogleAnalytics.getInstance(this);
+        //Comente este if para remover o erro de xml não encontrado
+//        sAnalytics = GoogleAnalytics.getInstance(this);
     }
 
     /**
@@ -51,9 +52,9 @@ public class AnalyticsApplication extends Application {
     synchronized public Tracker getDefaultTracker() {
         // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
         //Comente este if para remover o erro de xml não encontrado
-        if (sTracker == null) {
-            sTracker = sAnalytics.newTracker(R.xml.global_tracker);
-        }
+//        if (sTracker == null) {
+//            sTracker = sAnalytics.newTracker(R.xml.global_tracker);
+//        }
 
         return sTracker;
     }
